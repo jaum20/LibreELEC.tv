@@ -1,4 +1,4 @@
-From 37648ee775bd823679ca5d77902ac6d5e283bf88 Mon Sep 17 00:00:00 2001
+From 7688071fd134368514e53d40f9cf31137942a22a Mon Sep 17 00:00:00 2001
 From: Finley Xiao <finley.xiao@rock-chips.com>
 Date: Thu, 22 Jun 2017 20:22:25 +0800
 Subject: [PATCH] clk: rockchip: rk3228: fix some PLL_NUX_CLKs' gates
@@ -13,10 +13,10 @@ Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
  1 file changed, 16 insertions(+), 50 deletions(-)
 
 diff --git a/drivers/clk/rockchip/clk-rk3228.c b/drivers/clk/rockchip/clk-rk3228.c
-index 31abdec2d17e..1e68c78fbc5d 100644
+index 25f79af22cb8..0127d702720c 100644
 --- a/drivers/clk/rockchip/clk-rk3228.c
 +++ b/drivers/clk/rockchip/clk-rk3228.c
-@@ -138,24 +138,22 @@ static const struct rockchip_cpuclk_reg_data rk3228_cpuclk_data = {
+@@ -130,24 +130,22 @@ static const struct rockchip_cpuclk_reg_data rk3228_cpuclk_data = {
  
  PNAME(mux_pll_p)		= { "clk_24m", "xin24m" };
  
@@ -44,7 +44,7 @@ index 31abdec2d17e..1e68c78fbc5d 100644
  PNAME(mux_dclk_vop_p)		= { "hdmiphy", "sclk_vop_pre" };
  
  PNAME(mux_i2s0_p)		= { "i2s0_src", "i2s0_frac", "ext_i2s", "xin12m" };
-@@ -164,8 +162,6 @@ PNAME(mux_i2s_out_p)		= { "i2s1_pre", "xin12m" };
+@@ -156,8 +154,6 @@ PNAME(mux_i2s_out_p)		= { "i2s1_pre", "xin12m" };
  PNAME(mux_i2s2_p)		= { "i2s2_src", "i2s2_frac", "xin12m" };
  PNAME(mux_sclk_spdif_p)		= { "sclk_spdif_src", "spdif_frac", "xin12m" };
  
@@ -53,7 +53,7 @@ index 31abdec2d17e..1e68c78fbc5d 100644
  PNAME(mux_uart0_p)		= { "uart0_src", "uart0_frac", "xin24m" };
  PNAME(mux_uart1_p)		= { "uart1_src", "uart1_frac", "xin24m" };
  PNAME(mux_uart2_p)		= { "uart2_src", "uart2_frac", "xin24m" };
-@@ -226,27 +222,17 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
+@@ -218,27 +214,17 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
  			RK2928_CLKSEL_CON(4), 8, 5, DFLAGS),
  
  	/* PD_DDR */
@@ -86,7 +86,7 @@ index 31abdec2d17e..1e68c78fbc5d 100644
  	COMPOSITE_NOMUX(0, "pclk_dbg", "armclk", CLK_IGNORE_UNUSED,
  			RK2928_CLKSEL_CON(1), 0, 4, DFLAGS | CLK_DIVIDER_READ_ONLY,
  			RK2928_CLKGATE_CON(4), 1, GFLAGS),
-@@ -263,14 +249,9 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
+@@ -255,14 +241,9 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
  			RK2928_MISC_CON, 15, 1, MFLAGS),
  
  	/* PD_BUS */
@@ -103,7 +103,7 @@ index 31abdec2d17e..1e68c78fbc5d 100644
  	GATE(ACLK_CPU, "aclk_cpu", "aclk_cpu_src", 0,
  			RK2928_CLKGATE_CON(6), 0, GFLAGS),
  	COMPOSITE_NOMUX(HCLK_CPU, "hclk_cpu", "aclk_cpu_src", 0,
-@@ -343,14 +324,9 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
+@@ -335,14 +316,9 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
  			RK2928_CLKGATE_CON(3), 8, GFLAGS),
  
  	/* PD_PERI */
@@ -120,7 +120,7 @@ index 31abdec2d17e..1e68c78fbc5d 100644
  	COMPOSITE_NOMUX(PCLK_PERI, "pclk_peri", "aclk_peri_src", 0,
  			RK2928_CLKSEL_CON(10), 12, 3, DFLAGS,
  			RK2928_CLKGATE_CON(5), 2, GFLAGS),
-@@ -408,12 +384,9 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
+@@ -400,12 +376,9 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
  	 * Clock-Architecture Diagram 2
  	 */
  
@@ -135,7 +135,7 @@ index 31abdec2d17e..1e68c78fbc5d 100644
  	DIV(DCLK_HDMI_PHY, "dclk_hdmiphy", "sclk_vop_src", 0,
  			RK2928_CLKSEL_CON(29), 0, 3, DFLAGS),
  	DIV(0, "sclk_vop_pre", "sclk_vop_src", 0,
-@@ -476,16 +449,9 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
+@@ -468,16 +441,9 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
  			RK2928_CLKSEL_CON(24), 6, 10, DFLAGS,
  			RK2928_CLKGATE_CON(2), 8, GFLAGS),
  
@@ -154,7 +154,11 @@ index 31abdec2d17e..1e68c78fbc5d 100644
  
  	COMPOSITE(SCLK_SPI0, "sclk_spi0", mux_pll_src_2plls_p, 0,
  			RK2928_CLKSEL_CON(25), 8, 1, MFLAGS, 0, 7, DFLAGS,
-From 40b3301c59ca34a2901391275f8387bd03633223 Mon Sep 17 00:00:00 2001
+-- 
+2.17.1
+
+
+From bca0c84829270b8bff59212e84d86d9cbd2aa4f2 Mon Sep 17 00:00:00 2001
 From: Finley Xiao <finley.xiao@rock-chips.com>
 Date: Sun, 18 Mar 2018 21:41:43 +0800
 Subject: [PATCH] clk: rockchip: rk3228: Fix sclk_wifi div_width
@@ -166,10 +170,10 @@ Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/clk/rockchip/clk-rk3228.c b/drivers/clk/rockchip/clk-rk3228.c
-index 26788c075bab..fadc52cf2d36 100644
+index 0127d702720c..6ef71ec239ae 100644
 --- a/drivers/clk/rockchip/clk-rk3228.c
 +++ b/drivers/clk/rockchip/clk-rk3228.c
-@@ -364,7 +364,7 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
+@@ -353,7 +353,7 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
  			RK2928_CLKGATE_CON(10), 12, GFLAGS),
  
  	COMPOSITE(SCLK_WIFI, "sclk_wifi", mux_pll_src_cpll_gpll_usb480m_p, 0,
@@ -177,8 +181,12 @@ index 26788c075bab..fadc52cf2d36 100644
 +			RK2928_CLKSEL_CON(23), 5, 2, MFLAGS, 0, 5, DFLAGS,
  			RK2928_CLKGATE_CON(2), 15, GFLAGS),
  
- 	COMPOSITE(SCLK_SDMMC, "sclk_sdmmc0", mux_mmc_src_p, 0,
-From 6aacd99ecf717fb2a020f503bc8ffc3fd67facc7 Mon Sep 17 00:00:00 2001
+ 	COMPOSITE(SCLK_SDMMC, "sclk_sdmmc", mux_mmc_src_p, 0,
+-- 
+2.17.1
+
+
+From 3acbbe5eb438e8b1061a803881579030d3c2b424 Mon Sep 17 00:00:00 2001
 From: Chen Lei <lei.chen@rock-chips.com>
 Date: Tue, 25 Dec 2018 18:29:04 +0800
 Subject: [PATCH] clk: rockchip: rk322x: fix wrong mmc phase shift for rk3228
@@ -193,10 +201,10 @@ Signed-off-by: Chen Lei <lei.chen@rock-chips.com>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/clk/rockchip/clk-rk3228.c b/drivers/clk/rockchip/clk-rk3228.c
-index eb7dd7406944..b9948dfd43d0 100644
+index 6ef71ec239ae..27adfca1a095 100644
 --- a/drivers/clk/rockchip/clk-rk3228.c
 +++ b/drivers/clk/rockchip/clk-rk3228.c
-@@ -629,13 +629,13 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
+@@ -610,13 +610,13 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
  
  	/* PD_MMC */
  	MMC(SCLK_SDMMC_DRV,    "sdmmc_drv",    "sclk_sdmmc", RK3228_SDMMC_CON0, 1),
@@ -213,7 +221,11 @@ index eb7dd7406944..b9948dfd43d0 100644
  };
  
  static const char *const rk3228_critical_clocks[] __initconst = {
-From a198c95b94845eec7bc61cacd1c4bd56717447e9 Mon Sep 17 00:00:00 2001
+-- 
+2.17.1
+
+
+From a692001c1249473bdfe975ef53d2bdb8a4df736d Mon Sep 17 00:00:00 2001
 From: Finley Xiao <finley.xiao@rock-chips.com>
 Date: Mon, 5 Feb 2018 10:04:15 +0800
 Subject: [PATCH] clk: rockchip: rk3228: Fix armclk parent
@@ -225,10 +237,10 @@ Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
  1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/clk/rockchip/clk-rk3228.c b/drivers/clk/rockchip/clk-rk3228.c
-index a4d92cd95e64..fb3f34fb449f 100644
+index 27adfca1a095..58292f80ad66 100644
 --- a/drivers/clk/rockchip/clk-rk3228.c
 +++ b/drivers/clk/rockchip/clk-rk3228.c
-@@ -139,7 +139,7 @@ static const struct rockchip_cpuclk_reg_data rk3228_cpuclk_data = {
+@@ -131,7 +131,7 @@ static const struct rockchip_cpuclk_reg_data rk3228_cpuclk_data = {
  PNAME(mux_pll_p)		= { "clk_24m", "xin24m" };
  
  PNAME(mux_ddrphy_p)		= { "dpll", "gpll", "apll" };
@@ -237,7 +249,7 @@ index a4d92cd95e64..fb3f34fb449f 100644
  PNAME(mux_usb480m_phy_p)	= { "usb480m_phy0", "usb480m_phy1" };
  PNAME(mux_usb480m_p)		= { "usb480m_phy", "xin24m" };
  PNAME(mux_hdmiphy_p)		= { "hdmiphy_phy", "xin24m" };
-@@ -233,6 +233,12 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
+@@ -225,6 +225,12 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
  			RK2928_CLKGATE_CON(7), 0, GFLAGS),
  
  	/* PD_CORE */
@@ -250,7 +262,11 @@ index a4d92cd95e64..fb3f34fb449f 100644
  	COMPOSITE_NOMUX(0, "pclk_dbg", "armclk", CLK_IGNORE_UNUSED,
  			RK2928_CLKSEL_CON(1), 0, 4, DFLAGS | CLK_DIVIDER_READ_ONLY,
  			RK2928_CLKGATE_CON(4), 1, GFLAGS),
-From 86eabe311f20bc32571861a28777e557b3bd1441 Mon Sep 17 00:00:00 2001
+-- 
+2.17.1
+
+
+From 4807c179abd6de6a4ab2ed1f2886c04ed0ea1f69 Mon Sep 17 00:00:00 2001
 From: Finley Xiao <finley.xiao@rock-chips.com>
 Date: Sun, 18 Mar 2018 21:42:22 +0800
 Subject: [PATCH] clk: rockchip: rk3228: remove the flag ROCKCHIP_PLL_SYNC_RATE
@@ -265,10 +281,10 @@ Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/clk/rockchip/clk-rk3228.c b/drivers/clk/rockchip/clk-rk3228.c
-index fadc52cf2d36..6572ddcfe8a3 100644
+index 58292f80ad66..fba513de94eb 100644
 --- a/drivers/clk/rockchip/clk-rk3228.c
 +++ b/drivers/clk/rockchip/clk-rk3228.c
-@@ -178,7 +178,7 @@ static struct rockchip_pll_clock rk3228_pll_clks[] __initdata = {
+@@ -170,7 +170,7 @@ static struct rockchip_pll_clock rk3228_pll_clks[] __initdata = {
  	[cpll] = PLL(pll_rk3036, PLL_CPLL, "cpll", mux_pll_p, 0, RK2928_PLL_CON(6),
  		     RK2928_MODE_CON, 8, 8, 0, NULL),
  	[gpll] = PLL(pll_rk3036, PLL_GPLL, "gpll", mux_pll_p, 0, RK2928_PLL_CON(9),
@@ -277,7 +293,11 @@ index fadc52cf2d36..6572ddcfe8a3 100644
  };
  
  #define MFLAGS CLK_MUX_HIWORD_MASK
-From 011fafcfa0dd3c391fb8fd01edf1e2bbd7bc3b2f Mon Sep 17 00:00:00 2001
+-- 
+2.17.1
+
+
+From f57d5061e7357a8f7a181517530658a223ba415b Mon Sep 17 00:00:00 2001
 From: Finley Xiao <finley.xiao@rock-chips.com>
 Date: Thu, 22 Jun 2017 19:53:46 +0800
 Subject: [PATCH] clk: rockchip: rk3228: fix gpu gate-register
@@ -292,10 +312,10 @@ Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/clk/rockchip/clk-rk3228.c b/drivers/clk/rockchip/clk-rk3228.c
-index ca2b87d05418..31abdec2d17e 100644
+index fba513de94eb..5e9c6986e541 100644
 --- a/drivers/clk/rockchip/clk-rk3228.c
 +++ b/drivers/clk/rockchip/clk-rk3228.c
-@@ -590,8 +590,8 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
+@@ -554,8 +554,8 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
  	GATE(0, "pclk_peri_noc", "pclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(12), 2, GFLAGS),
  
  	/* PD_GPU */
@@ -305,8 +325,12 @@ index ca2b87d05418..31abdec2d17e 100644
 +	GATE(0, "aclk_gpu_noc", "aclk_gpu_pre", 0, RK2928_CLKGATE_CON(7), 15, GFLAGS),
  
  	/* PD_BUS */
- 	GATE(0, "sclk_initmem_mbist", "aclk_cpu", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(8), 1, GFLAGS),
-From d2f238a541a2f72c1bfed9f20cdcff84dcd5edcb Mon Sep 17 00:00:00 2001
+ 	GATE(0, "sclk_initmem_mbist", "aclk_cpu", 0, RK2928_CLKGATE_CON(8), 1, GFLAGS),
+-- 
+2.17.1
+
+
+From 264d996d0c5469510ebf89583f054a2b2e9eb939 Mon Sep 17 00:00:00 2001
 From: Elaine Zhang <zhangqing@rock-chips.com>
 Date: Tue, 25 Dec 2018 14:58:30 +0800
 Subject: [PATCH] clk: rockchip: rk322x: fix up the gate con description error
@@ -318,10 +342,10 @@ Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/clk/rockchip/clk-rk3228.c b/drivers/clk/rockchip/clk-rk3228.c
-index 2735fc334539..eb7dd7406944 100644
+index 5e9c6986e541..448b202bf4f3 100644
 --- a/drivers/clk/rockchip/clk-rk3228.c
 +++ b/drivers/clk/rockchip/clk-rk3228.c
-@@ -239,11 +239,11 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
+@@ -226,11 +226,11 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
  
  	/* PD_CORE */
  	GATE(0, "apll_core", "apll", CLK_IGNORE_UNUSED,
@@ -336,228 +360,6 @@ index 2735fc334539..eb7dd7406944 100644
  	COMPOSITE_NOMUX(0, "pclk_dbg", "armclk", CLK_IGNORE_UNUSED,
  			RK2928_CLKSEL_CON(1), 0, 4, DFLAGS | CLK_DIVIDER_READ_ONLY,
  			RK2928_CLKGATE_CON(4), 1, GFLAGS),
-diff --git a/include/dt-bindings/clock/rk3228-cru.h b/include/dt-bindings/clock/rk3228-cru.h
-index de550ea56e..16e1feae5c 100644
---- a/include/dt-bindings/clock/rk3228-cru.h
-+++ b/include/dt-bindings/clock/rk3228-cru.h
-@@ -65,6 +65,7 @@
- #define SCLK_OTGPHY0		142
- #define SCLK_OTGPHY1		143
- #define SCLK_HDMI_PHY		144
-+#define SCLK_DDRC		145
- 
- /* dclk gates */
- #define DCLK_VOP		190
-@@ -115,6 +116,7 @@
- #define PCLK_HDMI_CTRL		364
- #define PCLK_HDMI_PHY		365
- #define PCLK_GMAC		367
-+#define PCLK_ACODECPHY		368
- 
- /* hclk gates */
- #define HCLK_I2S0_8CH		442
-diff --git a/drivers/clk/rockchip/clk-rk3228.c b/drivers/clk/rockchip/clk-rk3228.c
-index 448b202bf4..ad960ae574 100644
---- a/drivers/clk/rockchip/clk-rk3228.c
-+++ b/drivers/clk/rockchip/clk-rk3228.c
-@@ -510,12 +510,12 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
- 
- 	/* PD_VOP */
- 	GATE(ACLK_RGA, "aclk_rga", "aclk_rga_pre", 0, RK2928_CLKGATE_CON(13), 0, GFLAGS),
--	GATE(0, "aclk_rga_noc", "aclk_rga_pre", 0, RK2928_CLKGATE_CON(13), 11, GFLAGS),
-+	GATE(0, "aclk_rga_noc", "aclk_rga_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(13), 11, GFLAGS),
- 	GATE(ACLK_IEP, "aclk_iep", "aclk_iep_pre", 0, RK2928_CLKGATE_CON(13), 2, GFLAGS),
--	GATE(0, "aclk_iep_noc", "aclk_iep_pre", 0, RK2928_CLKGATE_CON(13), 9, GFLAGS),
-+	GATE(0, "aclk_iep_noc", "aclk_iep_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(13), 9, GFLAGS),
- 
- 	GATE(ACLK_VOP, "aclk_vop", "aclk_vop_pre", 0, RK2928_CLKGATE_CON(13), 5, GFLAGS),
--	GATE(0, "aclk_vop_noc", "aclk_vop_pre", 0, RK2928_CLKGATE_CON(13), 12, GFLAGS),
-+	GATE(0, "aclk_vop_noc", "aclk_vop_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(13), 12, GFLAGS),
- 
- 	GATE(ACLK_HDCP, "aclk_hdcp", "aclk_hdcp_pre", 0, RK2928_CLKGATE_CON(14), 10, GFLAGS),
- 	GATE(0, "aclk_hdcp_noc", "aclk_hdcp_pre", 0, RK2928_CLKGATE_CON(13), 10, GFLAGS),
-@@ -523,13 +523,13 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
- 	GATE(HCLK_RGA, "hclk_rga", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(13), 1, GFLAGS),
- 	GATE(HCLK_IEP, "hclk_iep", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(13), 3, GFLAGS),
- 	GATE(HCLK_VOP, "hclk_vop", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(13), 6, GFLAGS),
--	GATE(0, "hclk_vio_ahb_arbi", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(13), 7, GFLAGS),
--	GATE(0, "hclk_vio_noc", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(13), 8, GFLAGS),
--	GATE(0, "hclk_vop_noc", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(13), 13, GFLAGS),
--	GATE(HCLK_VIO_H2P, "hclk_vio_h2p", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(14), 7, GFLAGS),
-+	GATE(0, "hclk_vio_ahb_arbi", "hclk_vio_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(13), 7, GFLAGS),
-+	GATE(0, "hclk_vio_noc", "hclk_vio_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(13), 8, GFLAGS),
-+	GATE(0, "hclk_vop_noc", "hclk_vio_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(13), 13, GFLAGS),
-+	GATE(HCLK_VIO_H2P, "hclk_vio_h2p", "hclk_vio_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(14), 7, GFLAGS),
- 	GATE(HCLK_HDCP_MMU, "hclk_hdcp_mmu", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(14), 12, GFLAGS),
- 	GATE(PCLK_HDMI_CTRL, "pclk_hdmi_ctrl", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(14), 6, GFLAGS),
--	GATE(PCLK_VIO_H2P, "pclk_vio_h2p", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(14), 8, GFLAGS),
-+	GATE(PCLK_VIO_H2P, "pclk_vio_h2p", "hclk_vio_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(14), 8, GFLAGS),
- 	GATE(PCLK_HDCP, "pclk_hdcp", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(14), 11, GFLAGS),
- 
- 	/* PD_PERI */
-@@ -541,13 +541,13 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
- 	GATE(HCLK_EMMC, "hclk_emmc", "hclk_peri", 0, RK2928_CLKGATE_CON(11), 2, GFLAGS),
- 	GATE(HCLK_NANDC, "hclk_nandc", "hclk_peri", 0, RK2928_CLKGATE_CON(11), 3, GFLAGS),
- 	GATE(HCLK_HOST0, "hclk_host0", "hclk_peri", 0, RK2928_CLKGATE_CON(11), 6, GFLAGS),
--	GATE(0, "hclk_host0_arb", "hclk_peri", 0, RK2928_CLKGATE_CON(11), 7, GFLAGS),
-+	GATE(0, "hclk_host0_arb", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(11), 7, GFLAGS),
- 	GATE(HCLK_HOST1, "hclk_host1", "hclk_peri", 0, RK2928_CLKGATE_CON(11), 8, GFLAGS),
--	GATE(0, "hclk_host1_arb", "hclk_peri", 0, RK2928_CLKGATE_CON(11), 9, GFLAGS),
-+	GATE(0, "hclk_host1_arb", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(11), 9, GFLAGS),
- 	GATE(HCLK_HOST2, "hclk_host2", "hclk_peri", 0, RK2928_CLKGATE_CON(11), 10, GFLAGS),
- 	GATE(HCLK_OTG, "hclk_otg", "hclk_peri", 0, RK2928_CLKGATE_CON(11), 12, GFLAGS),
--	GATE(0, "hclk_otg_pmu", "hclk_peri", 0, RK2928_CLKGATE_CON(11), 13, GFLAGS),
--	GATE(0, "hclk_host2_arb", "hclk_peri", 0, RK2928_CLKGATE_CON(11), 14, GFLAGS),
-+	GATE(0, "hclk_otg_pmu", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(11), 13, GFLAGS),
-+	GATE(0, "hclk_host2_arb", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(11), 14, GFLAGS),
- 	GATE(0, "hclk_peri_noc", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(12), 1, GFLAGS),
- 
- 	GATE(PCLK_GMAC, "pclk_gmac", "pclk_peri", 0, RK2928_CLKGATE_CON(11), 5, GFLAGS),
-@@ -555,15 +555,15 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
- 
- 	/* PD_GPU */
- 	GATE(ACLK_GPU, "aclk_gpu", "aclk_gpu_pre", 0, RK2928_CLKGATE_CON(7), 14, GFLAGS),
--	GATE(0, "aclk_gpu_noc", "aclk_gpu_pre", 0, RK2928_CLKGATE_CON(7), 15, GFLAGS),
-+	GATE(0, "aclk_gpu_noc", "aclk_gpu_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(7), 15, GFLAGS),
- 
- 	/* PD_BUS */
--	GATE(0, "sclk_initmem_mbist", "aclk_cpu", 0, RK2928_CLKGATE_CON(8), 1, GFLAGS),
--	GATE(0, "aclk_initmem", "aclk_cpu", 0, RK2928_CLKGATE_CON(8), 0, GFLAGS),
-+	GATE(0, "sclk_initmem_mbist", "aclk_cpu", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(8), 1, GFLAGS),
-+	GATE(0, "aclk_initmem", "aclk_cpu", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(8), 0, GFLAGS),
- 	GATE(ACLK_DMAC, "aclk_dmac_bus", "aclk_cpu", 0, RK2928_CLKGATE_CON(8), 2, GFLAGS),
- 	GATE(0, "aclk_bus_noc", "aclk_cpu", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(10), 1, GFLAGS),
- 
--	GATE(0, "hclk_rom", "hclk_cpu", 0, RK2928_CLKGATE_CON(8), 3, GFLAGS),
-+	GATE(0, "hclk_rom", "hclk_cpu", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(8), 3, GFLAGS),
- 	GATE(HCLK_I2S0_8CH, "hclk_i2s0_8ch", "hclk_cpu", 0, RK2928_CLKGATE_CON(8), 7, GFLAGS),
- 	GATE(HCLK_I2S1_8CH, "hclk_i2s1_8ch", "hclk_cpu", 0, RK2928_CLKGATE_CON(8), 8, GFLAGS),
- 	GATE(HCLK_I2S2_2CH, "hclk_i2s2_2ch", "hclk_cpu", 0, RK2928_CLKGATE_CON(8), 9, GFLAGS),
-@@ -572,9 +572,9 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
- 	GATE(HCLK_M_CRYPTO, "hclk_crypto_mst", "hclk_cpu", 0, RK2928_CLKGATE_CON(8), 11, GFLAGS),
- 	GATE(HCLK_S_CRYPTO, "hclk_crypto_slv", "hclk_cpu", 0, RK2928_CLKGATE_CON(8), 12, GFLAGS),
- 
--	GATE(0, "pclk_ddrupctl", "pclk_ddr_pre", 0, RK2928_CLKGATE_CON(8), 4, GFLAGS),
--	GATE(0, "pclk_ddrmon", "pclk_ddr_pre", 0, RK2928_CLKGATE_CON(8), 6, GFLAGS),
--	GATE(0, "pclk_msch_noc", "pclk_ddr_pre", 0, RK2928_CLKGATE_CON(10), 2, GFLAGS),
-+	GATE(0, "pclk_ddrupctl", "pclk_ddr_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(8), 4, GFLAGS),
-+	GATE(0, "pclk_ddrmon", "pclk_ddr_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(8), 6, GFLAGS),
-+	GATE(0, "pclk_msch_noc", "pclk_ddr_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(10), 2, GFLAGS),
- 
- 	GATE(PCLK_EFUSE_1024, "pclk_efuse_1024", "pclk_cpu", 0, RK2928_CLKGATE_CON(8), 13, GFLAGS),
- 	GATE(PCLK_EFUSE_256, "pclk_efuse_256", "pclk_cpu", 0, RK2928_CLKGATE_CON(8), 14, GFLAGS),
-@@ -583,7 +583,7 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
- 	GATE(PCLK_I2C2, "pclk_i2c2", "pclk_cpu", 0, RK2928_CLKGATE_CON(9), 1, GFLAGS),
- 	GATE(PCLK_I2C3, "pclk_i2c3", "pclk_cpu", 0, RK2928_CLKGATE_CON(9), 2, GFLAGS),
- 	GATE(PCLK_TIMER, "pclk_timer0", "pclk_cpu", 0, RK2928_CLKGATE_CON(9), 4, GFLAGS),
--	GATE(0, "pclk_stimer", "pclk_cpu", 0, RK2928_CLKGATE_CON(9), 5, GFLAGS),
-+	GATE(0, "pclk_stimer", "pclk_cpu", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(9), 5, GFLAGS),
- 	GATE(PCLK_SPI0, "pclk_spi0", "pclk_cpu", 0, RK2928_CLKGATE_CON(9), 6, GFLAGS),
- 	GATE(PCLK_PWM, "pclk_rk_pwm", "pclk_cpu", 0, RK2928_CLKGATE_CON(9), 7, GFLAGS),
- 	GATE(PCLK_GPIO0, "pclk_gpio0", "pclk_cpu", 0, RK2928_CLKGATE_CON(9), 8, GFLAGS),
-@@ -597,22 +597,22 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
- 	GATE(PCLK_GRF, "pclk_grf", "pclk_cpu", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(10), 0, GFLAGS),
- 	GATE(0, "pclk_cru", "pclk_cpu", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(10), 1, GFLAGS),
- 	GATE(0, "pclk_sgrf", "pclk_cpu", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(10), 2, GFLAGS),
--	GATE(0, "pclk_sim", "pclk_cpu", 0, RK2928_CLKGATE_CON(10), 3, GFLAGS),
-+	GATE(0, "pclk_sim", "pclk_cpu", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(10), 3, GFLAGS),
- 
--	GATE(0, "pclk_ddrphy", "pclk_phy_pre", 0, RK2928_CLKGATE_CON(10), 3, GFLAGS),
--	GATE(0, "pclk_acodecphy", "pclk_phy_pre", 0, RK2928_CLKGATE_CON(10), 5, GFLAGS),
-+	GATE(0, "pclk_ddrphy", "pclk_phy_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(10), 3, GFLAGS),
-+	GATE(PCLK_ACODECPHY, "pclk_acodecphy", "pclk_phy_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(10), 5, GFLAGS),
- 	GATE(PCLK_HDMI_PHY, "pclk_hdmiphy", "pclk_phy_pre", 0, RK2928_CLKGATE_CON(10), 7, GFLAGS),
--	GATE(0, "pclk_vdacphy", "pclk_phy_pre", 0, RK2928_CLKGATE_CON(10), 8, GFLAGS),
--	GATE(0, "pclk_phy_noc", "pclk_phy_pre", 0, RK2928_CLKGATE_CON(10), 9, GFLAGS),
-+	GATE(0, "pclk_vdacphy", "pclk_phy_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(10), 8, GFLAGS),
-+	GATE(0, "pclk_phy_noc", "pclk_phy_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(10), 9, GFLAGS),
- 
- 	GATE(ACLK_VPU, "aclk_vpu", "aclk_vpu_pre", 0, RK2928_CLKGATE_CON(15), 0, GFLAGS),
--	GATE(0, "aclk_vpu_noc", "aclk_vpu_pre", 0, RK2928_CLKGATE_CON(15), 4, GFLAGS),
-+	GATE(0, "aclk_vpu_noc", "aclk_vpu_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(15), 4, GFLAGS),
- 	GATE(ACLK_RKVDEC, "aclk_rkvdec", "aclk_rkvdec_pre", 0, RK2928_CLKGATE_CON(15), 2, GFLAGS),
--	GATE(0, "aclk_rkvdec_noc", "aclk_rkvdec_pre", 0, RK2928_CLKGATE_CON(15), 6, GFLAGS),
-+	GATE(0, "aclk_rkvdec_noc", "aclk_rkvdec_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(15), 6, GFLAGS),
- 	GATE(HCLK_VPU, "hclk_vpu", "hclk_vpu_pre", 0, RK2928_CLKGATE_CON(15), 1, GFLAGS),
--	GATE(0, "hclk_vpu_noc", "hclk_vpu_pre", 0, RK2928_CLKGATE_CON(15), 5, GFLAGS),
-+	GATE(0, "hclk_vpu_noc", "hclk_vpu_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(15), 5, GFLAGS),
- 	GATE(HCLK_RKVDEC, "hclk_rkvdec", "hclk_rkvdec_pre", 0, RK2928_CLKGATE_CON(15), 3, GFLAGS),
--	GATE(0, "hclk_rkvdec_noc", "hclk_rkvdec_pre", 0, RK2928_CLKGATE_CON(15), 7, GFLAGS),
-+	GATE(0, "hclk_rkvdec_noc", "hclk_rkvdec_pre", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(15), 7, GFLAGS),
- 
- 	/* PD_MMC */
- 	MMC(SCLK_SDMMC_DRV,    "sdmmc_drv",    "sclk_sdmmc", RK3228_SDMMC_CON0, 1),
-@@ -656,8 +656,10 @@ static const char *const rk3228_critical_clocks[] __initconst = {
- 	"pclk_phy_noc",
- 	"aclk_vpu_noc",
- 	"aclk_rkvdec_noc",
-+	"aclk_rkvdec",
- 	"hclk_vpu_noc",
- 	"hclk_rkvdec_noc",
-+	"hclk_rkvdec",
- };
- 
- static void __init rk3228_clk_init(struct device_node *np)
-diff --git a/drivers/clk/rockchip/clk.h b/drivers/clk/rockchip/clk.h
-index 2271a84124..e3ccfcb2a1 100644
---- a/drivers/clk/rockchip/clk.h
-+++ b/drivers/clk/rockchip/clk.h
-@@ -134,6 +134,7 @@ struct clk;
- #define RK3308_EMMC_CON0		0x490
- #define RK3308_EMMC_CON1		0x494
- 
-+#define RK3228_MODE_CON		0x40
- #define RK3328_PLL_CON(x)		RK2928_PLL_CON(x)
- #define RK3328_CLKSEL_CON(x)		((x) * 0x4 + 0x100)
- #define RK3328_CLKGATE_CON(x)		((x) * 0x4 + 0x200)
-diff --git a/drivers/clk/rockchip/clk-rk3228.c b/drivers/clk/rockchip/clk-rk3228.c
-index b9ee15b1f2..9f98f42ac9 100644
---- a/drivers/clk/rockchip/clk-rk3228.c
-+++ b/drivers/clk/rockchip/clk-rk3228.c
-@@ -662,21 +662,28 @@ static const char *const rk3228_critical_clocks[] __initconst = {
- 	"hclk_rkvdec",
- };
- 
-+static void __iomem *rk3228_cru_base;
-+
-+static void rk3228_clk_shutdown(void)
-+{
-+	writel_relaxed(0x11010000, rk3228_cru_base + RK3228_MODE_CON);
-+}
-+
- static void __init rk3228_clk_init(struct device_node *np)
- {
- 	struct rockchip_clk_provider *ctx;
--	void __iomem *reg_base;
- 
--	reg_base = of_iomap(np, 0);
--	if (!reg_base) {
-+	rk3228_cru_base = of_iomap(np, 0);
-+
-+	if (!rk3228_cru_base) {
- 		pr_err("%s: could not map cru region\n", __func__);
- 		return;
- 	}
- 
--	ctx = rockchip_clk_init(np, reg_base, CLK_NR_CLKS);
-+	ctx = rockchip_clk_init(np, rk3228_cru_base, CLK_NR_CLKS);
- 	if (IS_ERR(ctx)) {
- 		pr_err("%s: rockchip clk init failed\n", __func__);
--		iounmap(reg_base);
-+		iounmap(rk3228_cru_base);
- 		return;
- 	}
- 
-@@ -693,10 +702,10 @@ static void __init rk3228_clk_init(struct device_node *np)
- 			&rk3228_cpuclk_data, rk3228_cpuclk_rates,
- 			ARRAY_SIZE(rk3228_cpuclk_rates));
- 
--	rockchip_register_softrst(np, 9, reg_base + RK2928_SOFTRST_CON(0),
-+	rockchip_register_softrst(np, 9, rk3228_cru_base + RK2928_SOFTRST_CON(0),
- 				  ROCKCHIP_SOFTRST_HIWORD_MASK);
- 
--	rockchip_register_restart_notifier(ctx, RK3228_GLB_SRST_FST, NULL);
-+	rockchip_register_restart_notifier(ctx, RK3228_GLB_SRST_FST, rk3228_clk_shutdown);
- 
- 	rockchip_clk_of_add_provider(np, ctx);
- }
+-- 
+2.17.1
+
