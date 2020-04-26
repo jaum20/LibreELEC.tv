@@ -1,8 +1,7 @@
-From dc4eaa80dc3753167b487d80e60b38b936eea07e Mon Sep 17 00:00:00 2001
+From 11537a3a50a48751c9329ad6cf1654c2cf297cb5 Mon Sep 17 00:00:00 2001
 From: Jonas Karlman <jonas@kwiboo.se>
 Date: Mon, 18 Feb 2019 20:17:40 +0000
-Subject: [PATCH] [media] rc/keymaps: add keytable for Pine64 IR Remote
- Controller
+Subject: [PATCH] rc/keymaps: add keytable for Pine64 IR Remote Controller
 
 This RC map is based on remote key schema at [1], the mouse button key
 did not have an obvious target and was mapped to KEY_CONTEXT_MENU.
@@ -12,16 +11,16 @@ did not have an obvious target and was mapped to KEY_CONTEXT_MENU.
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
  drivers/media/rc/keymaps/Makefile    |  1 +
- drivers/media/rc/keymaps/rc-pine64.c | 59 ++++++++++++++++++++++++++++++++++++
+ drivers/media/rc/keymaps/rc-pine64.c | 59 ++++++++++++++++++++++++++++
  include/media/rc-map.h               |  1 +
  3 files changed, 61 insertions(+)
  create mode 100644 drivers/media/rc/keymaps/rc-pine64.c
 
 diff --git a/drivers/media/rc/keymaps/Makefile b/drivers/media/rc/keymaps/Makefile
-index a56fc634d2d6..7b24df2ecd93 100644
+index aaa1bf81d00d..c903112fc0c1 100644
 --- a/drivers/media/rc/keymaps/Makefile
 +++ b/drivers/media/rc/keymaps/Makefile
-@@ -78,6 +78,7 @@ obj-$(CONFIG_RC_MAP) += rc-adstech-dvb-t-pci.o \
+@@ -79,6 +79,7 @@ obj-$(CONFIG_RC_MAP) += rc-adstech-dvb-t-pci.o \
  			rc-npgtech.o \
  			rc-odroid.o \
  			rc-pctv-sedna.o \
@@ -95,10 +94,10 @@ index 000000000000..94e5624f63f4
 +MODULE_LICENSE("GPL");
 +MODULE_AUTHOR("Jonas Karlman");
 diff --git a/include/media/rc-map.h b/include/media/rc-map.h
-index afd2ab31bdf2..d420172fb911 100644
+index d22810dcd85c..bd1f4f4347d5 100644
 --- a/include/media/rc-map.h
 +++ b/include/media/rc-map.h
-@@ -231,6 +231,7 @@ struct rc_map *rc_map_get(const char *name);
+@@ -233,6 +233,7 @@ struct rc_map *rc_map_get(const char *name);
  #define RC_MAP_NPGTECH                   "rc-npgtech"
  #define RC_MAP_ODROID                    "rc-odroid"
  #define RC_MAP_PCTV_SEDNA                "rc-pctv-sedna"
@@ -106,8 +105,11 @@ index afd2ab31bdf2..d420172fb911 100644
  #define RC_MAP_PINNACLE_COLOR            "rc-pinnacle-color"
  #define RC_MAP_PINNACLE_GREY             "rc-pinnacle-grey"
  #define RC_MAP_PINNACLE_PCTV_HD          "rc-pinnacle-pctv-hd"
+-- 
+2.17.1
 
-From 45fb9a7ad0baf6bb5537d40d02379690f6011acf Mon Sep 17 00:00:00 2001
+
+From 64be34f37bf89d457bc4352f8f8c663a30464a40 Mon Sep 17 00:00:00 2001
 From: Jonas Karlman <jonas@kwiboo.se>
 Date: Wed, 7 Aug 2019 15:11:23 +0000
 Subject: [PATCH] ASoC: hdmi-codec: reorder channel allocation list
@@ -129,11 +131,11 @@ most specific speaker mask at the top.
 
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
- sound/soc/codecs/hdmi-codec.c | 115 +++++++++++++++++++-----------------------
+ sound/soc/codecs/hdmi-codec.c | 115 ++++++++++++++++------------------
  1 file changed, 53 insertions(+), 62 deletions(-)
 
 diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index 543363102d03..42bf1334f464 100644
+index f005751da2cc..437759e5f459 100644
 --- a/sound/soc/codecs/hdmi-codec.c
 +++ b/sound/soc/codecs/hdmi-codec.c
 @@ -189,84 +189,75 @@ static const struct snd_pcm_chmap_elem hdmi_codec_8ch_chmaps[] = {
@@ -274,153 +276,11 @@ index 543363102d03..42bf1334f464 100644
  };
  
  struct hdmi_codec_priv {
+-- 
+2.17.1
 
-From f895f1f4de0b7252f29e7e5779727b303df9e58d Mon Sep 17 00:00:00 2001
-From: schaecsn <schaecsn@gmx.net>
-Date: Sun, 17 Nov 2019 21:24:13 -0800
-Subject: [PATCH] thermal: rockchip: enable hwmon
 
-Enable hwmon for the soc and gpu temperature sensors.
-
-Signed-off-by: Stefan Schaeckeler <schaecsn@gmx.net>
----
- drivers/thermal/rockchip_thermal.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
-index 343c2f5c5a25..e47c60010259 100644
---- a/drivers/thermal/rockchip_thermal.c
-+++ b/drivers/thermal/rockchip_thermal.c
-@@ -19,6 +19,8 @@
- #include <linux/mfd/syscon.h>
- #include <linux/pinctrl/consumer.h>
- 
-+#include "thermal_hwmon.h"
-+
- /**
-  * If the temperature over a period of time High,
-  * the resulting TSHUT gave CRU module,let it reset the entire chip,
-@@ -1321,8 +1323,15 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
- 
- 	thermal->chip->control(thermal->regs, true);
- 
--	for (i = 0; i < thermal->chip->chn_num; i++)
-+	for (i = 0; i < thermal->chip->chn_num; i++) {
- 		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
-+		thermal->sensors[i].tzd->tzp->no_hwmon = false;
-+		error = thermal_add_hwmon_sysfs(thermal->sensors[i].tzd);
-+		if (error)
-+			dev_warn(&pdev->dev,
-+				 "failed to register sensor %d with hwmon: %d\n",
-+				 i, error);
-+	}
- 
- 	platform_set_drvdata(pdev, thermal);
- 
-@@ -1344,6 +1353,7 @@ static int rockchip_thermal_remove(struct platform_device *pdev)
- 	for (i = 0; i < thermal->chip->chn_num; i++) {
- 		struct rockchip_thermal_sensor *sensor = &thermal->sensors[i];
- 
-+		thermal_remove_hwmon_sysfs(sensor->tzd);
- 		rockchip_thermal_toggle_sensor(sensor, false);
- 	}
- 
-
-From b5bcb54fe763aa9f40bae7af7e0629a3a6b93a52 Mon Sep 17 00:00:00 2001
-From: Robin Murphy <robin.murphy@arm.com>
-Date: Thu, 28 Nov 2019 20:59:27 +0000
-Subject: [PATCH] arm64: dts: rockchip: Add GPU cooling device for RK3399
-
-As for RK3288, now that we have a binding for the GPU we can
-hook up the missing cooling device for the thermal zone.
-
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index e62ea0e2b657..aa0838adb224 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -828,6 +828,14 @@
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&gpu_alert0>;
-+					cooling-device =
-+						<&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 	};
- 
-@@ -1887,6 +1895,7 @@
- 			     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH 0>;
- 		interrupt-names = "gpu", "job", "mmu";
- 		clocks = <&cru ACLK_GPU>;
-+		#cooling-cells = <2>;
- 		power-domains = <&power RK3399_PD_GPU>;
- 		status = "disabled";
- 	};
-
-From 3a1811868a98b2178563a986b628dbaca9bdf210 Mon Sep 17 00:00:00 2001
-From: "redchenjs@live.com" <redchenjs@live.com>
-Date: Sun, 1 Dec 2019 06:28:26 +0000
-Subject: [PATCH] ARM: dts: rockchip: Add missing cpu operating points for
- rk3288-tinker
-
-The generic operating points specified in rk3288.dtsi are specified by
-Rockchip as conservative and for all cases.
-
-The Tinker Board / S devices use a special chip variant called rk3288-c
-and use different operating points with a higher max frequency.
-
-So add the missing operating points for Tinker Board / S devices, also
-increase the regulator-max-microvolt to 1400000 so that the cpu can
-operate at 1.8 GHz.
-
-Signed-off-by: Jack Chen <redchenjs@live.com>
----
- arch/arm/boot/dts/rk3288-tinker.dtsi | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
-index 0aeef23ca3db..312582c1bd37 100644
---- a/arch/arm/boot/dts/rk3288-tinker.dtsi
-+++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
-@@ -113,6 +113,17 @@
- 	cpu0-supply = <&vdd_cpu>;
- };
- 
-+&cpu_opp_table {
-+	opp-1704000000 {
-+		opp-hz = /bits/ 64 <1704000000>;
-+		opp-microvolt = <1350000>;
-+	};
-+	opp-1800000000 {
-+		opp-hz = /bits/ 64 <1800000000>;
-+		opp-microvolt = <1400000>;
-+	};
-+};
-+
- &gmac {
- 	assigned-clocks = <&cru SCLK_MAC>;
- 	assigned-clock-parents = <&ext_gmac>;
-@@ -175,7 +186,7 @@
- 				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-min-microvolt = <750000>;
--				regulator-max-microvolt = <1350000>;
-+				regulator-max-microvolt = <1400000>;
- 				regulator-name = "vdd_arm";
- 				regulator-ramp-delay = <6000>;
- 				regulator-state-mem {
-
-From 933ddafeb4621f0e2cdf18022223115569e4659e Mon Sep 17 00:00:00 2001
+From 5e626ea314cb0b25dc7a58e72908b1f91e762dfc Mon Sep 17 00:00:00 2001
 From: Jonas Karlman <jonas@kwiboo.se>
 Date: Tue, 1 Oct 2019 20:52:42 +0000
 Subject: [PATCH] media: cec-adap: add debounce support when setting an invalid
@@ -496,10 +356,10 @@ index 05088fcefe81..9bfd11ef987b 100644
 +
 +FIXME: Make a section "1.1 Debouncing" that explains this module option.
 diff --git a/drivers/media/cec/cec-adap.c b/drivers/media/cec/cec-adap.c
-index 9340435a94a0..266bf704b0fd 100644
+index 6c95dc471d4c..c483e847db95 100644
 --- a/drivers/media/cec/cec-adap.c
 +++ b/drivers/media/cec/cec-adap.c
-@@ -1595,8 +1595,15 @@ void cec_s_phys_addr(struct cec_adapter *adap, u16 phys_addr, bool block)
+@@ -1609,8 +1609,15 @@ void cec_s_phys_addr(struct cec_adapter *adap, u16 phys_addr, bool block)
  	if (IS_ERR_OR_NULL(adap))
  		return;
  
@@ -517,7 +377,7 @@ index 9340435a94a0..266bf704b0fd 100644
  }
  EXPORT_SYMBOL_GPL(cec_s_phys_addr);
 diff --git a/drivers/media/cec/cec-core.c b/drivers/media/cec/cec-core.c
-index db7adffcdc76..24405e96e785 100644
+index 0c52e1bb3910..cd71d77c057c 100644
 --- a/drivers/media/cec/cec-core.c
 +++ b/drivers/media/cec/cec-core.c
 @@ -28,6 +28,10 @@ static bool debug_phys_addr;
@@ -540,7 +400,7 @@ index db7adffcdc76..24405e96e785 100644
  	mutex_lock(&adap->lock);
  	__cec_s_phys_addr(adap, CEC_PHYS_ADDR_INVALID, false);
  	__cec_s_log_addrs(adap, NULL, false);
-@@ -250,6 +256,17 @@ static const struct file_operations cec_error_inj_fops = {
+@@ -232,6 +238,17 @@ static const struct file_operations cec_error_inj_fops = {
  };
  #endif
  
@@ -558,7 +418,7 @@ index db7adffcdc76..24405e96e785 100644
  struct cec_adapter *cec_allocate_adapter(const struct cec_adap_ops *ops,
  					 void *priv, const char *name, u32 caps,
  					 u8 available_las)
-@@ -288,6 +305,7 @@ struct cec_adapter *cec_allocate_adapter(const struct cec_adap_ops *ops,
+@@ -270,6 +287,7 @@ struct cec_adapter *cec_allocate_adapter(const struct cec_adap_ops *ops,
  	INIT_LIST_HEAD(&adap->transmit_queue);
  	INIT_LIST_HEAD(&adap->wait_queue);
  	init_waitqueue_head(&adap->kthread_waitq);
@@ -567,7 +427,7 @@ index db7adffcdc76..24405e96e785 100644
  	/* adap->devnode initialization */
  	INIT_LIST_HEAD(&adap->devnode.fhs);
 diff --git a/drivers/media/cec/cec-priv.h b/drivers/media/cec/cec-priv.h
-index 7bdf855aaecd..e8b1fc0a22c4 100644
+index 9bbd05053d42..d479dbd50528 100644
 --- a/drivers/media/cec/cec-priv.h
 +++ b/drivers/media/cec/cec-priv.h
 @@ -27,6 +27,7 @@ static inline bool msg_is_raw(const struct cec_msg *msg)
@@ -579,7 +439,7 @@ index 7bdf855aaecd..e8b1fc0a22c4 100644
  void cec_put_device(struct cec_devnode *devnode);
  
 diff --git a/include/media/cec.h b/include/media/cec.h
-index 0a4f69cc9dd4..3048b3f2219c 100644
+index 972bc8cd4384..5befad3a6a0f 100644
 --- a/include/media/cec.h
 +++ b/include/media/cec.h
 @@ -164,6 +164,8 @@ struct cec_adapter {
@@ -591,675 +451,11 @@ index 0a4f69cc9dd4..3048b3f2219c 100644
  	const struct cec_adap_ops *ops;
  	void *priv;
  	u32 capabilities;
+-- 
+2.17.1
 
-From 943aab648dbd4061511b0f4de544af28710127dc Mon Sep 17 00:00:00 2001
-From: Wright Feng <wright.feng@cypress.com>
-Date: Thu, 12 Dec 2019 00:52:45 +0100
-Subject: [PATCH] brcmfmac: reset two D11 cores if chip has two D11 cores
 
-There are two D11 cores in RSDB chips like 4359. We have to reset two
-D11 cores simutaneously before firmware download, or the firmware may
-not be initialized correctly and cause "fw initialized failed" error.
-
-Signed-off-by: Wright Feng <wright.feng@cypress.com>
-Signed-off-by: Soeren Moch <smoch@web.de>
-Reviewed-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
----
- .../wireless/broadcom/brcm80211/brcmfmac/chip.c    | 50 ++++++++++++++++++++++
- .../wireless/broadcom/brcm80211/brcmfmac/chip.h    |  1 +
- .../wireless/broadcom/brcm80211/brcmfmac/pcie.c    |  2 +-
- 3 files changed, 52 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
-index dd586a96b57a..5e11b30ae337 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
-@@ -433,11 +433,25 @@ static void brcmf_chip_ai_resetcore(struct brcmf_core_priv *core, u32 prereset,
- {
- 	struct brcmf_chip_priv *ci;
- 	int count;
-+	struct brcmf_core *d11core2 = NULL;
-+	struct brcmf_core_priv *d11priv2 = NULL;
- 
- 	ci = core->chip;
- 
-+	/* special handle two D11 cores reset */
-+	if (core->pub.id == BCMA_CORE_80211) {
-+		d11core2 = brcmf_chip_get_d11core(&ci->pub, 1);
-+		if (d11core2) {
-+			brcmf_dbg(INFO, "found two d11 cores, reset both\n");
-+			d11priv2 = container_of(d11core2,
-+						struct brcmf_core_priv, pub);
-+		}
-+	}
-+
- 	/* must disable first to work for arbitrary current core state */
- 	brcmf_chip_ai_coredisable(core, prereset, reset);
-+	if (d11priv2)
-+		brcmf_chip_ai_coredisable(d11priv2, prereset, reset);
- 
- 	count = 0;
- 	while (ci->ops->read32(ci->ctx, core->wrapbase + BCMA_RESET_CTL) &
-@@ -449,9 +463,30 @@ static void brcmf_chip_ai_resetcore(struct brcmf_core_priv *core, u32 prereset,
- 		usleep_range(40, 60);
- 	}
- 
-+	if (d11priv2) {
-+		count = 0;
-+		while (ci->ops->read32(ci->ctx,
-+				       d11priv2->wrapbase + BCMA_RESET_CTL) &
-+				       BCMA_RESET_CTL_RESET) {
-+			ci->ops->write32(ci->ctx,
-+					 d11priv2->wrapbase + BCMA_RESET_CTL,
-+					 0);
-+			count++;
-+			if (count > 50)
-+				break;
-+			usleep_range(40, 60);
-+		}
-+	}
-+
- 	ci->ops->write32(ci->ctx, core->wrapbase + BCMA_IOCTL,
- 			 postreset | BCMA_IOCTL_CLK);
- 	ci->ops->read32(ci->ctx, core->wrapbase + BCMA_IOCTL);
-+
-+	if (d11priv2) {
-+		ci->ops->write32(ci->ctx, d11priv2->wrapbase + BCMA_IOCTL,
-+				 postreset | BCMA_IOCTL_CLK);
-+		ci->ops->read32(ci->ctx, d11priv2->wrapbase + BCMA_IOCTL);
-+	}
- }
- 
- char *brcmf_chip_name(u32 id, u32 rev, char *buf, uint len)
-@@ -1113,6 +1148,21 @@ void brcmf_chip_detach(struct brcmf_chip *pub)
- 	kfree(chip);
- }
- 
-+struct brcmf_core *brcmf_chip_get_d11core(struct brcmf_chip *pub, u8 unit)
-+{
-+	struct brcmf_chip_priv *chip;
-+	struct brcmf_core_priv *core;
-+
-+	chip = container_of(pub, struct brcmf_chip_priv, pub);
-+	list_for_each_entry(core, &chip->cores, list) {
-+		if (core->pub.id == BCMA_CORE_80211) {
-+			if (unit-- == 0)
-+				return &core->pub;
-+		}
-+	}
-+	return NULL;
-+}
-+
- struct brcmf_core *brcmf_chip_get_core(struct brcmf_chip *pub, u16 coreid)
- {
- 	struct brcmf_chip_priv *chip;
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.h
-index 7b00f6a59e89..8fa38658e727 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.h
-@@ -74,6 +74,7 @@ struct brcmf_chip *brcmf_chip_attach(void *ctx,
- 				     const struct brcmf_buscore_ops *ops);
- void brcmf_chip_detach(struct brcmf_chip *chip);
- struct brcmf_core *brcmf_chip_get_core(struct brcmf_chip *chip, u16 coreid);
-+struct brcmf_core *brcmf_chip_get_d11core(struct brcmf_chip *pub, u8 unit);
- struct brcmf_core *brcmf_chip_get_chipcommon(struct brcmf_chip *chip);
- struct brcmf_core *brcmf_chip_get_pmu(struct brcmf_chip *pub);
- bool brcmf_chip_iscoreup(struct brcmf_core *core);
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-index 6c463475e90b..259b9e8f4300 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/pcie.c
-@@ -78,7 +78,7 @@ static const struct brcmf_firmware_mapping brcmf_pcie_fwnames[] = {
- 	BRCMF_FW_ENTRY(BRCM_CC_4371_CHIP_ID, 0xFFFFFFFF, 4371),
- };
- 
--#define BRCMF_PCIE_FW_UP_TIMEOUT		2000 /* msec */
-+#define BRCMF_PCIE_FW_UP_TIMEOUT		5000 /* msec */
- 
- #define BRCMF_PCIE_REG_MAP_SIZE			(32 * 1024)
- 
-
-From 17d07d4ceeb0ecfb0f7df2a6936fe3a8c48f4a60 Mon Sep 17 00:00:00 2001
-From: Chung-Hsien Hsu <stanley.hsu@cypress.com>
-Date: Thu, 12 Dec 2019 00:52:46 +0100
-Subject: [PATCH] brcmfmac: set F2 blocksize and watermark for 4359
-
-Set F2 blocksize to 256 bytes and watermark to 0x40 for 4359. Also
-enable and configure F1 MesBusyCtrl. It fixes DMA error while having
-UDP bi-directional traffic.
-
-Signed-off-by: Chung-Hsien Hsu <stanley.hsu@cypress.com>
-[slightly adapted for rebase on mainline linux]
-Signed-off-by: Soeren Moch <smoch@web.de>
-Reviewed-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c |  6 +++++-
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c   | 15 +++++++++++++++
- 2 files changed, 20 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-index fc12598b2dd3..cf171a2aea35 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-@@ -43,6 +43,7 @@
- 
- #define SDIO_FUNC1_BLOCKSIZE		64
- #define SDIO_FUNC2_BLOCKSIZE		512
-+#define SDIO_4359_FUNC2_BLOCKSIZE	256
- /* Maximum milliseconds to wait for F2 to come up */
- #define SDIO_WAIT_F2RDY	3000
- 
-@@ -903,6 +904,7 @@ static void brcmf_sdiod_host_fixup(struct mmc_host *host)
- static int brcmf_sdiod_probe(struct brcmf_sdio_dev *sdiodev)
- {
- 	int ret = 0;
-+	unsigned int f2_blksz = SDIO_FUNC2_BLOCKSIZE;
- 
- 	sdio_claim_host(sdiodev->func1);
- 
-@@ -912,7 +914,9 @@ static int brcmf_sdiod_probe(struct brcmf_sdio_dev *sdiodev)
- 		sdio_release_host(sdiodev->func1);
- 		goto out;
- 	}
--	ret = sdio_set_block_size(sdiodev->func2, SDIO_FUNC2_BLOCKSIZE);
-+	if (sdiodev->func2->device == SDIO_DEVICE_ID_BROADCOM_4359)
-+		f2_blksz = SDIO_4359_FUNC2_BLOCKSIZE;
-+	ret = sdio_set_block_size(sdiodev->func2, f2_blksz);
- 	if (ret) {
- 		brcmf_err("Failed to set F2 blocksize\n");
- 		sdio_release_host(sdiodev->func1);
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index 264ad63232f8..21e535072f3f 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -42,6 +42,8 @@
- #define DEFAULT_F2_WATERMARK    0x8
- #define CY_4373_F2_WATERMARK    0x40
- #define CY_43012_F2_WATERMARK    0x60
-+#define CY_4359_F2_WATERMARK	0x40
-+#define CY_4359_F1_MESBUSYCTRL	(CY_4359_F2_WATERMARK | SBSDIO_MESBUSYCTRL_ENAB)
- 
- #ifdef DEBUG
- 
-@@ -4205,6 +4207,19 @@ static void brcmf_sdio_firmware_callback(struct device *dev, int err,
- 			brcmf_sdiod_writeb(sdiod, SBSDIO_DEVICE_CTL, devctl,
- 					   &err);
- 			break;
-+		case SDIO_DEVICE_ID_BROADCOM_4359:
-+			brcmf_dbg(INFO, "set F2 watermark to 0x%x*4 bytes\n",
-+				  CY_4359_F2_WATERMARK);
-+			brcmf_sdiod_writeb(sdiod, SBSDIO_WATERMARK,
-+					   CY_4359_F2_WATERMARK, &err);
-+			devctl = brcmf_sdiod_readb(sdiod, SBSDIO_DEVICE_CTL,
-+						   &err);
-+			devctl |= SBSDIO_DEVCTL_F2WM_ENAB;
-+			brcmf_sdiod_writeb(sdiod, SBSDIO_DEVICE_CTL, devctl,
-+					   &err);
-+			brcmf_sdiod_writeb(sdiod, SBSDIO_FUNC1_MESBUSYCTRL,
-+					   CY_4359_F1_MESBUSYCTRL, &err);
-+			break;
- 		default:
- 			brcmf_sdiod_writeb(sdiod, SBSDIO_WATERMARK,
- 					   DEFAULT_F2_WATERMARK, &err);
-
-From 674ac87ce4558b0425bfd05a8816c2163ff0df26 Mon Sep 17 00:00:00 2001
-From: Soeren Moch <smoch@web.de>
-Date: Thu, 12 Dec 2019 00:52:47 +0100
-Subject: [PATCH] brcmfmac: fix rambase for 4359/9
-
-Newer 4359 chip revisions need a different rambase address.
-This fixes firmware download on such devices which fails otherwise.
-
-Signed-off-by: Soeren Moch <smoch@web.de>
-Acked-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
-index 5e11b30ae337..36c913893b6d 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
-@@ -712,7 +712,6 @@ static u32 brcmf_chip_tcm_rambase(struct brcmf_chip_priv *ci)
- 	case BRCM_CC_43569_CHIP_ID:
- 	case BRCM_CC_43570_CHIP_ID:
- 	case BRCM_CC_4358_CHIP_ID:
--	case BRCM_CC_4359_CHIP_ID:
- 	case BRCM_CC_43602_CHIP_ID:
- 	case BRCM_CC_4371_CHIP_ID:
- 		return 0x180000;
-@@ -722,6 +721,8 @@ static u32 brcmf_chip_tcm_rambase(struct brcmf_chip_priv *ci)
- 	case BRCM_CC_4366_CHIP_ID:
- 	case BRCM_CC_43664_CHIP_ID:
- 		return 0x200000;
-+	case BRCM_CC_4359_CHIP_ID:
-+		return (ci->pub.chiprev < 9) ? 0x180000 : 0x160000;
- 	case CY_CC_4373_CHIP_ID:
- 		return 0x160000;
- 	default:
-
-From eb76633d7081bab5437d2d481b7e47eeb29f0e57 Mon Sep 17 00:00:00 2001
-From: Soeren Moch <smoch@web.de>
-Date: Thu, 12 Dec 2019 00:52:48 +0100
-Subject: [PATCH] brcmfmac: make errors when setting roaming parameters
- non-fatal
-
-4359 dongles do not support setting roaming parameters (error -52).
-Do not fail the 80211 configuration in this case.
-
-Signed-off-by: Soeren Moch <smoch@web.de>
-Acked-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-index e3ebb7abbdae..3d2fb64f4deb 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-@@ -5944,19 +5944,17 @@ static s32 brcmf_dongle_roam(struct brcmf_if *ifp)
- 	roamtrigger[1] = cpu_to_le32(BRCM_BAND_ALL);
- 	err = brcmf_fil_cmd_data_set(ifp, BRCMF_C_SET_ROAM_TRIGGER,
- 				     (void *)roamtrigger, sizeof(roamtrigger));
--	if (err) {
-+	if (err)
- 		bphy_err(drvr, "WLC_SET_ROAM_TRIGGER error (%d)\n", err);
--		goto roam_setup_done;
--	}
- 
- 	roam_delta[0] = cpu_to_le32(WL_ROAM_DELTA);
- 	roam_delta[1] = cpu_to_le32(BRCM_BAND_ALL);
- 	err = brcmf_fil_cmd_data_set(ifp, BRCMF_C_SET_ROAM_DELTA,
- 				     (void *)roam_delta, sizeof(roam_delta));
--	if (err) {
-+	if (err)
- 		bphy_err(drvr, "WLC_SET_ROAM_DELTA error (%d)\n", err);
--		goto roam_setup_done;
--	}
-+
-+	return 0;
- 
- roam_setup_done:
- 	return err;
-
-From 292a234f90d08ff79afb33171e6474d77eb2484a Mon Sep 17 00:00:00 2001
-From: Soeren Moch <smoch@web.de>
-Date: Thu, 12 Dec 2019 00:52:49 +0100
-Subject: [PATCH] brcmfmac: add support for BCM4359 SDIO chipset
-
-BCM4359 is a 2x2 802.11 abgn+ac Dual-Band HT80 combo chip and it
-supports Real Simultaneous Dual Band feature.
-
-Based on a similar patch by: Wright Feng <wright.feng@cypress.com>
-
-Signed-off-by: Soeren Moch <smoch@web.de>
-Acked-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c | 2 ++
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c   | 1 +
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c   | 2 ++
- include/linux/mmc/sdio_ids.h                              | 2 ++
- 4 files changed, 7 insertions(+)
-
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-index cf171a2aea35..2bd71aae4899 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcmsdh.c
-@@ -973,8 +973,10 @@ static const struct sdio_device_id brcmf_sdmmc_ids[] = {
- 	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_BROADCOM_43455),
- 	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_BROADCOM_4354),
- 	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_BROADCOM_4356),
-+	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_BROADCOM_4359),
- 	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_CYPRESS_4373),
- 	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_CYPRESS_43012),
-+	BRCMF_SDIO_DEVICE(SDIO_DEVICE_ID_CYPRESS_89359),
- 	{ /* end: all zeroes */ }
- };
- MODULE_DEVICE_TABLE(sdio, brcmf_sdmmc_ids);
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
-index 36c913893b6d..1a8394c3c901 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/chip.c
-@@ -1412,6 +1412,7 @@ bool brcmf_chip_sr_capable(struct brcmf_chip *pub)
- 		addr = CORE_CC_REG(base, sr_control0);
- 		reg = chip->ops->read32(chip->ctx, addr);
- 		return (reg & CC_SR_CTL0_ENABLE_MASK) != 0;
-+	case BRCM_CC_4359_CHIP_ID:
- 	case CY_CC_43012_CHIP_ID:
- 		addr = CORE_CC_REG(pmu->base, retention_ctl);
- 		reg = chip->ops->read32(chip->ctx, addr);
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-index 21e535072f3f..c4012ed58b9c 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-@@ -616,6 +616,7 @@ BRCMF_FW_DEF(43455, "brcmfmac43455-sdio");
- BRCMF_FW_DEF(43456, "brcmfmac43456-sdio");
- BRCMF_FW_DEF(4354, "brcmfmac4354-sdio");
- BRCMF_FW_DEF(4356, "brcmfmac4356-sdio");
-+BRCMF_FW_DEF(4359, "brcmfmac4359-sdio");
- BRCMF_FW_DEF(4373, "brcmfmac4373-sdio");
- BRCMF_FW_DEF(43012, "brcmfmac43012-sdio");
- 
-@@ -638,6 +639,7 @@ static const struct brcmf_firmware_mapping brcmf_sdio_fwnames[] = {
- 	BRCMF_FW_ENTRY(BRCM_CC_4345_CHIP_ID, 0xFFFFFDC0, 43455),
- 	BRCMF_FW_ENTRY(BRCM_CC_4354_CHIP_ID, 0xFFFFFFFF, 4354),
- 	BRCMF_FW_ENTRY(BRCM_CC_4356_CHIP_ID, 0xFFFFFFFF, 4356),
-+	BRCMF_FW_ENTRY(BRCM_CC_4359_CHIP_ID, 0xFFFFFFFF, 4359),
- 	BRCMF_FW_ENTRY(CY_CC_4373_CHIP_ID, 0xFFFFFFFF, 4373),
- 	BRCMF_FW_ENTRY(CY_CC_43012_CHIP_ID, 0xFFFFFFFF, 43012)
- };
-diff --git a/include/linux/mmc/sdio_ids.h b/include/linux/mmc/sdio_ids.h
-index d1a5d5df02f5..d51a31a59f16 100644
---- a/include/linux/mmc/sdio_ids.h
-+++ b/include/linux/mmc/sdio_ids.h
-@@ -41,8 +41,10 @@
- #define SDIO_DEVICE_ID_BROADCOM_43455		0xa9bf
- #define SDIO_DEVICE_ID_BROADCOM_4354		0x4354
- #define SDIO_DEVICE_ID_BROADCOM_4356		0x4356
-+#define SDIO_DEVICE_ID_BROADCOM_4359		0x4359
- #define SDIO_DEVICE_ID_CYPRESS_4373		0x4373
- #define SDIO_DEVICE_ID_CYPRESS_43012		43012
-+#define SDIO_DEVICE_ID_CYPRESS_89359		0x4355
- 
- #define SDIO_VENDOR_ID_INTEL			0x0089
- #define SDIO_DEVICE_ID_INTEL_IWMC3200WIMAX	0x1402
-
-From 6c9b1c4f22fa084c22e63775b48734a232e3cd39 Mon Sep 17 00:00:00 2001
-From: Wright Feng <wright.feng@cypress.com>
-Date: Thu, 12 Dec 2019 00:52:50 +0100
-Subject: [PATCH] brcmfmac: add RSDB condition when setting interface
- combinations
-
-With firmware RSDB feature
-1. The maximum support interface is four.
-2. The maximum difference channel is two.
-3. The maximum interfaces of {station/p2p client/AP} are two.
-4. The maximum interface of p2p device is one.
-
-Signed-off-by: Wright Feng <wright.feng@cypress.com>
-Signed-off-by: Soeren Moch <smoch@web.de>
-Reviewed-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
----
- .../broadcom/brcm80211/brcmfmac/cfg80211.c         | 54 ++++++++++++++++++----
- 1 file changed, 46 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-index 3d2fb64f4deb..885201328699 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-@@ -6452,6 +6452,9 @@ brcmf_txrx_stypes[NUM_NL80211_IFTYPES] = {
-  *	#STA <= 1, #AP <= 1, channels = 1, 2 total
-  *	#AP <= 4, matching BI, channels = 1, 4 total
-  *
-+ * no p2p and rsdb:
-+ *	#STA <= 2, #AP <= 2, channels = 2, 4 total
-+ *
-  * p2p, no mchan, and mbss:
-  *
-  *	#STA <= 1, #P2P-DEV <= 1, #{P2P-CL, P2P-GO} <= 1, channels = 1, 3 total
-@@ -6463,6 +6466,10 @@ brcmf_txrx_stypes[NUM_NL80211_IFTYPES] = {
-  *	#STA <= 1, #P2P-DEV <= 1, #{P2P-CL, P2P-GO} <= 1, channels = 2, 3 total
-  *	#STA <= 1, #P2P-DEV <= 1, #AP <= 1, #P2P-CL <= 1, channels = 1, 4 total
-  *	#AP <= 4, matching BI, channels = 1, 4 total
-+ *
-+ * p2p, rsdb, and no mbss:
-+ *	#STA <= 2, #P2P-DEV <= 1, #{P2P-CL, P2P-GO} <= 2, AP <= 2,
-+ *	 channels = 2, 4 total
-  */
- static int brcmf_setup_ifmodes(struct wiphy *wiphy, struct brcmf_if *ifp)
- {
-@@ -6470,13 +6477,14 @@ static int brcmf_setup_ifmodes(struct wiphy *wiphy, struct brcmf_if *ifp)
- 	struct ieee80211_iface_limit *c0_limits = NULL;
- 	struct ieee80211_iface_limit *p2p_limits = NULL;
- 	struct ieee80211_iface_limit *mbss_limits = NULL;
--	bool mbss, p2p;
-+	bool mbss, p2p, rsdb;
- 	int i, c, n_combos;
- 
- 	mbss = brcmf_feat_is_enabled(ifp, BRCMF_FEAT_MBSS);
- 	p2p = brcmf_feat_is_enabled(ifp, BRCMF_FEAT_P2P);
-+	rsdb = brcmf_feat_is_enabled(ifp, BRCMF_FEAT_RSDB);
- 
--	n_combos = 1 + !!p2p + !!mbss;
-+	n_combos = 1 + !!(p2p && !rsdb) + !!mbss;
- 	combo = kcalloc(n_combos, sizeof(*combo), GFP_KERNEL);
- 	if (!combo)
- 		goto err;
-@@ -6487,16 +6495,36 @@ static int brcmf_setup_ifmodes(struct wiphy *wiphy, struct brcmf_if *ifp)
- 
- 	c = 0;
- 	i = 0;
--	c0_limits = kcalloc(p2p ? 3 : 2, sizeof(*c0_limits), GFP_KERNEL);
-+	if (p2p && rsdb)
-+		c0_limits = kcalloc(4, sizeof(*c0_limits), GFP_KERNEL);
-+	else if (p2p)
-+		c0_limits = kcalloc(3, sizeof(*c0_limits), GFP_KERNEL);
-+	else
-+		c0_limits = kcalloc(2, sizeof(*c0_limits), GFP_KERNEL);
- 	if (!c0_limits)
- 		goto err;
--	c0_limits[i].max = 1;
--	c0_limits[i++].types = BIT(NL80211_IFTYPE_STATION);
--	if (p2p) {
-+	if (p2p && rsdb) {
-+		combo[c].num_different_channels = 2;
-+		wiphy->interface_modes |= BIT(NL80211_IFTYPE_P2P_CLIENT) |
-+					  BIT(NL80211_IFTYPE_P2P_GO) |
-+					  BIT(NL80211_IFTYPE_P2P_DEVICE);
-+		c0_limits[i].max = 2;
-+		c0_limits[i++].types = BIT(NL80211_IFTYPE_STATION);
-+		c0_limits[i].max = 1;
-+		c0_limits[i++].types = BIT(NL80211_IFTYPE_P2P_DEVICE);
-+		c0_limits[i].max = 2;
-+		c0_limits[i++].types = BIT(NL80211_IFTYPE_P2P_CLIENT) |
-+				       BIT(NL80211_IFTYPE_P2P_GO);
-+		c0_limits[i].max = 2;
-+		c0_limits[i++].types = BIT(NL80211_IFTYPE_AP);
-+		combo[c].max_interfaces = 5;
-+	} else if (p2p) {
- 		if (brcmf_feat_is_enabled(ifp, BRCMF_FEAT_MCHAN))
- 			combo[c].num_different_channels = 2;
- 		else
- 			combo[c].num_different_channels = 1;
-+		c0_limits[i].max = 1;
-+		c0_limits[i++].types = BIT(NL80211_IFTYPE_STATION);
- 		wiphy->interface_modes |= BIT(NL80211_IFTYPE_P2P_CLIENT) |
- 					  BIT(NL80211_IFTYPE_P2P_GO) |
- 					  BIT(NL80211_IFTYPE_P2P_DEVICE);
-@@ -6505,16 +6533,26 @@ static int brcmf_setup_ifmodes(struct wiphy *wiphy, struct brcmf_if *ifp)
- 		c0_limits[i].max = 1;
- 		c0_limits[i++].types = BIT(NL80211_IFTYPE_P2P_CLIENT) |
- 				       BIT(NL80211_IFTYPE_P2P_GO);
-+		combo[c].max_interfaces = i;
-+	} else if (rsdb) {
-+		combo[c].num_different_channels = 2;
-+		c0_limits[i].max = 2;
-+		c0_limits[i++].types = BIT(NL80211_IFTYPE_STATION);
-+		c0_limits[i].max = 2;
-+		c0_limits[i++].types = BIT(NL80211_IFTYPE_AP);
-+		combo[c].max_interfaces = 3;
- 	} else {
- 		combo[c].num_different_channels = 1;
- 		c0_limits[i].max = 1;
-+		c0_limits[i++].types = BIT(NL80211_IFTYPE_STATION);
-+		c0_limits[i].max = 1;
- 		c0_limits[i++].types = BIT(NL80211_IFTYPE_AP);
-+		combo[c].max_interfaces = i;
- 	}
--	combo[c].max_interfaces = i;
- 	combo[c].n_limits = i;
- 	combo[c].limits = c0_limits;
- 
--	if (p2p) {
-+	if (p2p && !rsdb) {
- 		c++;
- 		i = 0;
- 		p2p_limits = kcalloc(4, sizeof(*p2p_limits), GFP_KERNEL);
-
-From 8c3545f6af6eddc0ef18ef985d96697dac65acc2 Mon Sep 17 00:00:00 2001
-From: Wright Feng <wright.feng@cypress.com>
-Date: Thu, 12 Dec 2019 00:52:51 +0100
-Subject: [PATCH] brcmfmac: not set mbss in vif if firmware does not support
- MBSS
-
-With RSDB mode, FMAC and firmware are able to create 2 or more AP,
-so we should not set mbss in vif structure if firmware does not
-support MBSS feature.
-
-Signed-off-by: Wright Feng <wright.feng@cypress.com>
-Signed-off-by: Soeren Moch <smoch@web.de>
-Reviewed-by: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
----
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-index 885201328699..8020cf933c5d 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-@@ -5301,6 +5301,7 @@ struct brcmf_cfg80211_vif *brcmf_alloc_vif(struct brcmf_cfg80211_info *cfg,
- 	struct brcmf_cfg80211_vif *vif_walk;
- 	struct brcmf_cfg80211_vif *vif;
- 	bool mbss;
-+	struct brcmf_if *ifp = brcmf_get_ifp(cfg->pub, 0);
- 
- 	brcmf_dbg(TRACE, "allocating virtual interface (size=%zu)\n",
- 		  sizeof(*vif));
-@@ -5313,7 +5314,8 @@ struct brcmf_cfg80211_vif *brcmf_alloc_vif(struct brcmf_cfg80211_info *cfg,
- 
- 	brcmf_init_prof(&vif->profile);
- 
--	if (type == NL80211_IFTYPE_AP) {
-+	if (type == NL80211_IFTYPE_AP &&
-+	    brcmf_feat_is_enabled(ifp, BRCMF_FEAT_MBSS)) {
- 		mbss = false;
- 		list_for_each_entry(vif_walk, &cfg->vif_list, list) {
- 			if (vif_walk->wdev.iftype == NL80211_IFTYPE_AP) {
-
-From f0ba3ec80e9aff664dfd1def2c14caab9fd72f44 Mon Sep 17 00:00:00 2001
-From: Soeren Moch <smoch@web.de>
-Date: Thu, 12 Dec 2019 00:52:52 +0100
-Subject: [PATCH] arm64: dts: rockchip: RockPro64: enable wifi module at sdio0
-
-RockPro64 supports an Ampak AP6359SA based wifi/bt combo module.
-The BCM4359/9 wifi controller in this module is connected to sdio0,
-enable this interface.
-
-Use the in-band sdio irq instead of the out-of-band wifi_host_wake_l
-signal since the latter is not working reliably on this board (probably
-due to it's PCIe WAKE# connection).
-
-Signed-off-by: Soeren Moch <smoch@web.de>
----
- arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-index 7f4b2eba31d4..9fa92790d6e0 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-@@ -71,13 +71,6 @@
- 		clock-names = "ext_clock";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&wifi_enable_h>;
--
--		/*
--		 * On the module itself this is one of these (depending
--		 * on the actual card populated):
--		 * - SDIO_RESET_L_WL_REG_ON
--		 * - PDN (power down when low)
--		 */
- 		reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
- 	};
- 
-@@ -650,6 +643,20 @@
- 	status = "okay";
- };
- 
-+&sdio0 {
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	cap-sdio-irq;
-+	disable-wp;
-+	keep-power-in-suspend;
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+	non-removable;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
-+	sd-uhs-sdr104;
-+	status = "okay";
-+};
-+
- &sdmmc {
- 	bus-width = <4>;
- 	cap-sd-highspeed;
-
-From 355a3aad7ea5e41f6af92dc7e480339d3b3e008d Mon Sep 17 00:00:00 2001
-From: Soeren Moch <smoch@web.de>
-Date: Thu, 12 Dec 2019 00:52:53 +0100
-Subject: [PATCH] arm64: dts: rockchip: RockPro64: hook up bluetooth at uart0
-
-With enabled wifi support (required for firmware loading) for the
-Ampak AP6359SA based wifi/bt combo module we now also can enable
-the bluetooth part.
-
-Suggested-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Soeren Moch <smoch@web.de>
----
- arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 29 ++++++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-index 9fa92790d6e0..94cc462e234d 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-@@ -561,6 +561,20 @@
- };
- 
- &pinctrl {
-+	bt {
-+		bt_enable_h: bt-enable-h {
-+			rockchip,pins = <0 RK_PB1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		bt_host_wake_l: bt-host-wake-l {
-+			rockchip,pins = <0 RK_PA4 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+
-+		bt_wake_l: bt-wake-l {
-+			rockchip,pins = <2 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	buttons {
- 		pwrbtn: pwrbtn {
- 			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_up>;
-@@ -729,8 +743,21 @@
- 
- &uart0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&uart0_xfer &uart0_cts>;
-+	pinctrl-0 = <&uart0_xfer &uart0_cts &uart0_rts>;
- 	status = "okay";
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		clocks = <&rk808 1>;
-+		clock-names = "extclk";
-+		device-wakeup-gpios = <&gpio2 RK_PD3 GPIO_ACTIVE_HIGH>;
-+		host-wakeup-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_HIGH>;
-+		shutdown-gpios = <&gpio0 RK_PB1 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&bt_host_wake_l &bt_wake_l &bt_enable_h>;
-+		vbat-supply = <&vcc3v3_sys>;
-+		vddio-supply = <&vcc_1v8>;
-+	};
- };
- 
- &uart2 {
-
-From 223c34f8b8e03e498d65bc0e25d1ebc80e30a2b9 Mon Sep 17 00:00:00 2001
+From e7067ef6d71c5686c082f37f8e54454d499124a8 Mon Sep 17 00:00:00 2001
 From: Boris Brezillon <boris.brezillon@collabora.com>
 Date: Thu, 19 Dec 2019 11:11:48 +0100
 Subject: [PATCH] drm/bridge: Add a drm_bridge_state object
@@ -1277,15 +473,15 @@ Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/gpu/drm/drm_atomic.c        |  39 +++++++++
- drivers/gpu/drm/drm_atomic_helper.c |  20 +++++
- drivers/gpu/drm/drm_bridge.c        | 169 ++++++++++++++++++++++++++++++++++--
+ drivers/gpu/drm/drm_atomic.c        |  39 +++++++
+ drivers/gpu/drm/drm_atomic_helper.c |  20 ++++
+ drivers/gpu/drm/drm_bridge.c        | 169 +++++++++++++++++++++++++++-
  include/drm/drm_atomic.h            |   3 +
- include/drm/drm_bridge.h            | 120 +++++++++++++++++++++++++
+ include/drm/drm_bridge.h            | 120 ++++++++++++++++++++
  5 files changed, 345 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/gpu/drm/drm_atomic.c b/drivers/gpu/drm/drm_atomic.c
-index 14aeaf736321..02f8034f5240 100644
+index d33691512a8e..bf1b9c37d515 100644
 --- a/drivers/gpu/drm/drm_atomic.c
 +++ b/drivers/gpu/drm/drm_atomic.c
 @@ -30,6 +30,7 @@
@@ -1296,7 +492,7 @@ index 14aeaf736321..02f8034f5240 100644
  #include <drm/drm_debugfs.h>
  #include <drm/drm_device.h>
  #include <drm/drm_drv.h>
-@@ -1015,6 +1016,44 @@ static void drm_atomic_connector_print_state(struct drm_printer *p,
+@@ -1017,6 +1018,44 @@ static void drm_atomic_connector_print_state(struct drm_printer *p,
  		connector->funcs->atomic_print_state(p, state);
  }
  
@@ -1339,10 +535,10 @@ index 14aeaf736321..02f8034f5240 100644
 +EXPORT_SYMBOL(drm_atomic_add_encoder_bridges);
 +
  /**
-  * drm_atomic_add_affected_connectors - add connectors for crtc
+  * drm_atomic_add_affected_connectors - add connectors for CRTC
   * @state: atomic state
 diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index 62cb03d8f76e..69c474fc5dea 100644
+index 4511c2e07bb9..ad8eae98d9e8 100644
 --- a/drivers/gpu/drm/drm_atomic_helper.c
 +++ b/drivers/gpu/drm/drm_atomic_helper.c
 @@ -730,6 +730,26 @@ drm_atomic_helper_check_modeset(struct drm_device *dev,
@@ -1591,10 +787,10 @@ index c2cf0c90fa26..a3921b45f044 100644
  /**
   * of_drm_find_bridge - find the bridge corresponding to the device node in
 diff --git a/include/drm/drm_atomic.h b/include/drm/drm_atomic.h
-index 927e1205d7aa..1c0a08217712 100644
+index 951dfb15c27b..ccce65e14917 100644
 --- a/include/drm/drm_atomic.h
 +++ b/include/drm/drm_atomic.h
-@@ -660,6 +660,9 @@ __drm_atomic_get_current_plane_state(struct drm_atomic_state *state,
+@@ -669,6 +669,9 @@ __drm_atomic_get_current_plane_state(struct drm_atomic_state *state,
  	return plane->state;
  }
  
@@ -1605,7 +801,7 @@ index 927e1205d7aa..1c0a08217712 100644
  drm_atomic_add_affected_connectors(struct drm_atomic_state *state,
  				   struct drm_crtc *crtc);
 diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-index 51834036a42d..2d2f213dc747 100644
+index 694e153a7531..8a926c1a08db 100644
 --- a/include/drm/drm_bridge.h
 +++ b/include/drm/drm_bridge.h
 @@ -25,6 +25,8 @@
@@ -1768,10 +964,13 @@ index 51834036a42d..2d2f213dc747 100644
 +}
 +
  #ifdef CONFIG_DRM_PANEL_BRIDGE
- struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel,
- 					u32 connector_type);
+ struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel);
+ struct drm_bridge *drm_panel_bridge_add_typed(struct drm_panel *panel,
+-- 
+2.17.1
 
-From 49582f19875394b4266647e54c0131f03a282a70 Mon Sep 17 00:00:00 2001
+
+From 7b00bdecec40941c08461791cdc3ebfe766ffb15 Mon Sep 17 00:00:00 2001
 From: Boris Brezillon <boris.brezillon@collabora.com>
 Date: Thu, 19 Dec 2019 11:11:49 +0100
 Subject: [PATCH] drm/bridge: Patch atomic hooks to take a drm_bridge_state
@@ -1785,13 +984,13 @@ Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 41 +++++++++------
- drivers/gpu/drm/drm_bridge.c                       | 61 +++++++++++++++++-----
- include/drm/drm_bridge.h                           |  8 +--
+ .../drm/bridge/analogix/analogix_dp_core.c    | 41 +++++++------
+ drivers/gpu/drm/drm_bridge.c                  | 61 +++++++++++++++----
+ include/drm/drm_bridge.h                      |  8 +--
  3 files changed, 77 insertions(+), 33 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
-index bb411fe52ae8..c8b77b6a8fb0 100644
+index 6effe532f820..6fab71985cd4 100644
 --- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
 +++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
 @@ -1289,19 +1289,21 @@ struct drm_crtc *analogix_dp_get_new_crtc(struct analogix_dp_device *dp,
@@ -1997,7 +1196,7 @@ index a3921b45f044..6bdc4ab789c9 100644
  }
  EXPORT_SYMBOL(drm_atomic_bridge_chain_enable);
 diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-index 2d2f213dc747..07d7f1a59d50 100644
+index 8a926c1a08db..0331e330635b 100644
 --- a/include/drm/drm_bridge.h
 +++ b/include/drm/drm_bridge.h
 @@ -282,7 +282,7 @@ struct drm_bridge_funcs {
@@ -2036,8 +1235,11 @@ index 2d2f213dc747..07d7f1a59d50 100644
  
  	/**
  	 * @atomic_duplicate_state:
+-- 
+2.17.1
 
-From 502e34d5acec737bacdcdf1bf225a965251cd37e Mon Sep 17 00:00:00 2001
+
+From 7891bb247f22d65b57b84efb5cadaae13114236b Mon Sep 17 00:00:00 2001
 From: Boris Brezillon <boris.brezillon@collabora.com>
 Date: Thu, 19 Dec 2019 11:11:50 +0100
 Subject: [PATCH] drm/bridge: Add an ->atomic_check() hook
@@ -2054,13 +1256,13 @@ Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/gpu/drm/drm_atomic_helper.c | 12 +++----
- drivers/gpu/drm/drm_bridge.c        | 62 +++++++++++++++++++++++++++++++++++++
- include/drm/drm_bridge.h            | 29 ++++++++++++++++-
+ drivers/gpu/drm/drm_atomic_helper.c | 12 +++---
+ drivers/gpu/drm/drm_bridge.c        | 62 +++++++++++++++++++++++++++++
+ include/drm/drm_bridge.h            | 29 +++++++++++++-
  3 files changed, 96 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index 69c474fc5dea..4b2eb18ec1a7 100644
+index ad8eae98d9e8..afe14f72a824 100644
 --- a/drivers/gpu/drm/drm_atomic_helper.c
 +++ b/drivers/gpu/drm/drm_atomic_helper.c
 @@ -437,12 +437,12 @@ mode_fixup(struct drm_atomic_state *state)
@@ -2156,7 +1358,7 @@ index 6bdc4ab789c9..442804598f60 100644
   * drm_atomic_helper_bridge_destroy_state() - Default destroy state helper
   * @bridge: the bridge this state refers to
 diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-index 07d7f1a59d50..b63b4cf7383d 100644
+index 0331e330635b..269f0d1da339 100644
 --- a/include/drm/drm_bridge.h
 +++ b/include/drm/drm_bridge.h
 @@ -128,7 +128,9 @@ struct drm_bridge_funcs {
@@ -2209,8 +1411,11 @@ index 07d7f1a59d50..b63b4cf7383d 100644
  void drm_atomic_bridge_chain_disable(struct drm_bridge *bridge,
  				     struct drm_atomic_state *state);
  void drm_atomic_bridge_chain_post_disable(struct drm_bridge *bridge,
+-- 
+2.17.1
 
-From 859dc9e46f14b11382e0fbc1f015c08568517f65 Mon Sep 17 00:00:00 2001
+
+From 08c9023ffcdae0022fe84dac4e12efc6f989c6c8 Mon Sep 17 00:00:00 2001
 From: Boris Brezillon <boris.brezillon@collabora.com>
 Date: Thu, 19 Dec 2019 11:11:51 +0100
 Subject: [PATCH] drm/bridge: Add the necessary bits to support bus format
@@ -2252,8 +1457,8 @@ information from somewhere else, like a FW property).
 Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/gpu/drm/drm_bridge.c | 267 ++++++++++++++++++++++++++++++++++++++++++-
- include/drm/drm_bridge.h     | 124 ++++++++++++++++++++
+ drivers/gpu/drm/drm_bridge.c | 267 ++++++++++++++++++++++++++++++++++-
+ include/drm/drm_bridge.h     | 124 ++++++++++++++++
  2 files changed, 390 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
@@ -2554,7 +1759,7 @@ index 442804598f60..9cc4b0181f85 100644
  		if (ret)
  			return ret;
 diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-index b63b4cf7383d..c4fd15503aee 100644
+index 269f0d1da339..192227f03d4b 100644
 --- a/include/drm/drm_bridge.h
 +++ b/include/drm/drm_bridge.h
 @@ -35,6 +35,38 @@ struct drm_bridge;
@@ -2716,8 +1921,11 @@ index b63b4cf7383d..c4fd15503aee 100644
  void __drm_atomic_helper_bridge_reset(struct drm_bridge *bridge,
  				      struct drm_bridge_state *state);
  void drm_atomic_helper_bridge_destroy_state(struct drm_bridge *bridge,
+-- 
+2.17.1
 
-From 7c862ad0a16a7a5b2b8a81737fe9bd9c06391c41 Mon Sep 17 00:00:00 2001
+
+From 152ee505b889cb0f5bc3ad4af82b43a8f4f6562b Mon Sep 17 00:00:00 2001
 From: Jonas Karlman <jonas@kwiboo.se>
 Date: Wed, 18 Dec 2019 16:46:28 +0100
 Subject: [PATCH] drm/bridge: dw-hdmi: set mtmdsclock for deep color
@@ -2732,10 +1940,10 @@ Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
  1 file changed, 17 insertions(+)
 
 diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 67fca439bbfb..9e0927d22db6 100644
+index 24965e53d351..b8b91d28f398 100644
 --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
 +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -1818,9 +1818,26 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
+@@ -1824,9 +1824,26 @@ static void hdmi_av_composer(struct dw_hdmi *hdmi,
  
  	dev_dbg(hdmi->dev, "final pixclk = %d\n", vmode->mpixelclock);
  
@@ -2762,8 +1970,11 @@ index 67fca439bbfb..9e0927d22db6 100644
  	/* Set up HDMI_FC_INVIDCONF */
  	inv_val = (hdmi->hdmi_data.hdcp_enable ||
  		   (dw_hdmi_support_scdc(hdmi) &&
+-- 
+2.17.1
 
-From d38a4b3a81733ba3c262dafac74887006c3bc0ff Mon Sep 17 00:00:00 2001
+
+From 7cc0932dda90b853ff45cbe43688d5888a81d0b7 Mon Sep 17 00:00:00 2001
 From: Jonas Karlman <jonas@kwiboo.se>
 Date: Wed, 18 Dec 2019 16:46:29 +0100
 Subject: [PATCH] drm/bridge: dw-hdmi: add max bpc connector property
@@ -2778,10 +1989,10 @@ Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
  1 file changed, 4 insertions(+)
 
 diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 9e0927d22db6..051001f77dd4 100644
+index b8b91d28f398..8da173798ed4 100644
 --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
 +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -2406,6 +2406,10 @@ static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
+@@ -2412,6 +2412,10 @@ static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
  				    DRM_MODE_CONNECTOR_HDMIA,
  				    hdmi->ddc);
  
@@ -2792,8 +2003,11 @@ index 9e0927d22db6..051001f77dd4 100644
  	if (hdmi->version >= 0x200a && hdmi->plat_data->use_drm_infoframe)
  		drm_object_attach_property(&connector->base,
  			connector->dev->mode_config.hdr_output_metadata_property, 0);
+-- 
+2.17.1
 
-From fbf1c57734a89545c689100116c6bb5d296881b7 Mon Sep 17 00:00:00 2001
+
+From d38c69cb5bb12563a7a533ae5eb75453e736f85b Mon Sep 17 00:00:00 2001
 From: Neil Armstrong <narmstrong@baylibre.com>
 Date: Wed, 18 Dec 2019 16:46:30 +0100
 Subject: [PATCH] drm/bridge: synopsys: dw-hdmi: add bus format negociation
@@ -2804,14 +2018,14 @@ and use the negotiated formats in a basic atomic_check callback.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 272 +++++++++++++++++++++++++++++-
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 272 +++++++++++++++++++++-
  1 file changed, 268 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 051001f77dd4..80066c65f91d 100644
+index 8da173798ed4..88da301dc086 100644
 --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
 +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -2095,11 +2095,10 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
+@@ -2101,11 +2101,10 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
  	hdmi->hdmi_data.video_mode.mpixelrepetitionoutput = 0;
  	hdmi->hdmi_data.video_mode.mpixelrepetitioninput = 0;
  
@@ -2824,7 +2038,7 @@ index 051001f77dd4..80066c65f91d 100644
  		hdmi->hdmi_data.enc_in_bus_format = MEDIA_BUS_FMT_RGB888_1X24;
  
  	/* TOFIX: Get input encoding from plat data or fallback to none */
-@@ -2109,8 +2108,8 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
+@@ -2115,8 +2114,8 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
  	else
  		hdmi->hdmi_data.enc_in_encoding = V4L2_YCBCR_ENC_DEFAULT;
  
@@ -2835,7 +2049,7 @@ index 051001f77dd4..80066c65f91d 100644
  
  	hdmi->hdmi_data.pix_repet_factor = 0;
  	hdmi->hdmi_data.hdcp_enable = 0;
-@@ -2388,6 +2387,267 @@ static const struct drm_connector_helper_funcs dw_hdmi_connector_helper_funcs =
+@@ -2394,6 +2393,267 @@ static const struct drm_connector_helper_funcs dw_hdmi_connector_helper_funcs =
  	.atomic_check = dw_hdmi_connector_atomic_check,
  };
  
@@ -3103,7 +2317,7 @@ index 051001f77dd4..80066c65f91d 100644
  static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
  {
  	struct dw_hdmi *hdmi = bridge->driver_private;
-@@ -2496,6 +2756,9 @@ static void dw_hdmi_bridge_enable(struct drm_bridge *bridge)
+@@ -2502,6 +2762,9 @@ static void dw_hdmi_bridge_enable(struct drm_bridge *bridge)
  static const struct drm_bridge_funcs dw_hdmi_bridge_funcs = {
  	.attach = dw_hdmi_bridge_attach,
  	.detach = dw_hdmi_bridge_detach,
@@ -3113,7 +2327,7 @@ index 051001f77dd4..80066c65f91d 100644
  	.enable = dw_hdmi_bridge_enable,
  	.disable = dw_hdmi_bridge_disable,
  	.mode_set = dw_hdmi_bridge_mode_set,
-@@ -2960,6 +3223,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
+@@ -2966,6 +3229,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
  
  	hdmi->bridge.driver_private = hdmi;
  	hdmi->bridge.funcs = &dw_hdmi_bridge_funcs;
@@ -3121,8 +2335,11 @@ index 051001f77dd4..80066c65f91d 100644
  #ifdef CONFIG_OF
  	hdmi->bridge.of_node = pdev->dev.of_node;
  #endif
+-- 
+2.17.1
 
-From 046a2dcb296543b7f3309e968afee8e3c56af5ce Mon Sep 17 00:00:00 2001
+
+From 9c8d9cb1a3fa8b7cfe1052c1e6e549c294f65f69 Mon Sep 17 00:00:00 2001
 From: Neil Armstrong <narmstrong@baylibre.com>
 Date: Wed, 18 Dec 2019 16:46:31 +0100
 Subject: [PATCH] drm/bridge: synopsys: dw-hdmi: allow ycbcr420 modes for >=
@@ -3140,10 +2357,10 @@ Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
  2 files changed, 7 insertions(+)
 
 diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 80066c65f91d..0e716c40c42c 100644
+index 88da301dc086..5749bdaba95b 100644
 --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
 +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -3228,6 +3228,12 @@ __dw_hdmi_probe(struct platform_device *pdev,
+@@ -3234,6 +3234,12 @@ __dw_hdmi_probe(struct platform_device *pdev,
  	hdmi->bridge.of_node = pdev->dev.of_node;
  #endif
  
@@ -3168,4 +2385,6 @@ index 9d4d5cc47969..0b34a12c4a1c 100644
  
  	/* Vendor PHY support */
  	const struct dw_hdmi_phy_ops *phy_ops;
+-- 
+2.17.1
 

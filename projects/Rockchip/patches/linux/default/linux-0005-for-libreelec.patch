@@ -1,4 +1,4 @@
-From 47617b87407d583ed22591a565b6e1bb716b2876 Mon Sep 17 00:00:00 2001
+From fea4790fb9969f3b2faace793406bcd016091940 Mon Sep 17 00:00:00 2001
 From: William Wu <william.wu@rock-chips.com>
 Date: Mon, 4 Dec 2017 10:40:38 +0100
 Subject: [PATCH] dt-bindings: usb: add DT binding for RK3328 dwc3 controller
@@ -29,8 +29,11 @@ index c8c4b00ecb94..4ca357835a48 100644
  - clocks:	A list of phandle + clock-specifier pairs for the
  		clocks listed in clock-names
  - clock-names:	Should contain the following:
+-- 
+2.17.1
 
-From 45d171c2532e90406a72aa1c24a8d6a7b6d32e67 Mon Sep 17 00:00:00 2001
+
+From 041ddb731b5e025e1bea4d3d68c30f09521ca8dd Mon Sep 17 00:00:00 2001
 From: William Wu <william.wu@rock-chips.com>
 Date: Mon, 4 Dec 2017 10:40:39 +0100
 Subject: [PATCH] arm64: dts: rockchip: add usb3 controller node for RK3328
@@ -44,14 +47,14 @@ on ID of USB3.0 PHY.
 Signed-off-by: William Wu <william.wu@rock-chips.com>
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 ---
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 32 ++++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi | 32 ++++++++++++++++++++++++
  1 file changed, 32 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 8c9b7c3fcee4..901c525deb27 100644
+index a4b0947f82a7..bc9186f66d9c 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -1020,6 +1020,38 @@
+@@ -1037,6 +1037,38 @@
  		status = "disabled";
  	};
  
@@ -90,8 +93,11 @@ index 8c9b7c3fcee4..901c525deb27 100644
  	gic: interrupt-controller@ff811000 {
  		compatible = "arm,gic-400";
  		#interrupt-cells = <3>;
+-- 
+2.17.1
 
-From 52d7041671876e508888c5fa892a23e2a0cd1874 Mon Sep 17 00:00:00 2001
+
+From 6b2ec0b7974089cd179241595d76f204151a0329 Mon Sep 17 00:00:00 2001
 From: Heiko Stuebner <heiko@sntech.de>
 Date: Mon, 4 Dec 2017 10:40:41 +0100
 Subject: [PATCH] arm64: dts: rockchip: enable usb3 nodes on rk3328-rock64
@@ -123,8 +129,11 @@ index 345c045c58e6..1cc3a8f5c3d7 100644
  &vop {
  	status = "okay";
  };
+-- 
+2.17.1
 
-From 59166edf1d45e2b4bdc041b3db3116f89cdceba1 Mon Sep 17 00:00:00 2001
+
+From 39e4f61930b2b6108ae6423698f233d6d2b57958 Mon Sep 17 00:00:00 2001
 From: Jonas Karlman <jonas@kwiboo.se>
 Date: Tue, 12 Mar 2019 19:42:03 +0000
 Subject: [PATCH] arm64: dts: rockchip: enable usb3 nodes on rk3328-roc-cc
@@ -156,8 +165,11 @@ index b58948f478a1..78e0e23d1efb 100644
  &vop {
  	status = "okay";
  };
+-- 
+2.17.1
 
-From e8e3c96c057607a94e8df74f70b3d47cd182b3f5 Mon Sep 17 00:00:00 2001
+
+From aec6055775b63eaeb6b4a509b37aa6718fa2f84f Mon Sep 17 00:00:00 2001
 From: Jonas Karlman <jonas@kwiboo.se>
 Date: Sun, 12 May 2019 12:40:00 +0000
 Subject: [PATCH] arm64: dts: rockchip: enable usb3 nodes on rk3328-rockbox
@@ -186,8 +198,11 @@ index b82708cfe742..6f5eab7c0050 100644
  &vop {
  	status = "okay";
  };
+-- 
+2.17.1
 
-From a3a5b318d53b4b17979e9072525b636d79c71ca8 Mon Sep 17 00:00:00 2001
+
+From b1c19ab3e134c7ba1c0352b484fa5b3591f5af4d Mon Sep 17 00:00:00 2001
 From: Jonas Karlman <jonas@kwiboo.se>
 Date: Thu, 7 Feb 2019 22:03:15 +0000
 Subject: [PATCH] HACK: ARM: dts: rockchip: disable vopl node on rk3288
@@ -235,8 +250,11 @@ index 49b64f4908cd..5976c9a8eb0c 100644
  &wdt {
  	status = "okay";
  };
+-- 
+2.17.1
 
-From e56193bfecbbb8cc892437ec1a9503f86350ce56 Mon Sep 17 00:00:00 2001
+
+From b255ef1b90ebee3cfb44b545f75aa00e653411e8 Mon Sep 17 00:00:00 2001
 From: Jonas Karlman <jonas@kwiboo.se>
 Date: Mon, 15 Apr 2019 05:06:50 +0000
 Subject: [PATCH] HACK: arm64: dts: rockchip: disable vopl node on rk3399
@@ -249,15 +267,14 @@ Subject: [PATCH] HACK: arm64: dts: rockchip: disable vopl node on rk3399
  arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi      | 8 --------
  arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts    | 8 --------
  arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi     | 8 --------
- arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts    | 8 --------
  arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi    | 8 --------
- 9 files changed, 72 deletions(-)
+ 8 files changed, 64 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
-index e94e71cc0ec7..810b4dfef210 100644
+index e9e2a6fb623b..ee38f6da9368 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
-@@ -799,11 +799,3 @@
+@@ -801,11 +801,3 @@
  &vopb_mmu {
  	status = "okay";
  };
@@ -270,10 +287,10 @@ index e94e71cc0ec7..810b4dfef210 100644
 -	status = "okay";
 -};
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
-index 4944d78a0a1c..d19e801240b8 100644
+index e87a04477440..f22f54dd0b73 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
-@@ -794,11 +794,3 @@
+@@ -797,11 +797,3 @@
  &vopb_mmu {
  	status = "okay";
  };
@@ -302,10 +319,10 @@ index c88018a0ef35..002ed18477e6 100644
 -	status = "okay";
 -};
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts b/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
-index 6b0034b72300..0aec59ba9d77 100644
+index bfb9fa11adcc..aa7f5e89ad72 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
-@@ -784,11 +784,3 @@
+@@ -787,11 +787,3 @@
  &vopb_mmu {
  	status = "okay";
  };
@@ -318,10 +335,10 @@ index 6b0034b72300..0aec59ba9d77 100644
 -	status = "okay";
 -};
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-index 9a1ce3a4ae12..5f28b37810a4 100644
+index 9f225e9c3d54..e917060f34c7 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-@@ -803,11 +803,3 @@
+@@ -804,11 +804,3 @@
  &vopb_mmu {
  	status = "okay";
  };
@@ -334,10 +351,10 @@ index 9a1ce3a4ae12..5f28b37810a4 100644
 -	status = "okay";
 -};
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
-index a1c7bd7923c1..a8e94d93f410 100644
+index e4c71c77c3ef..4fdbc692b138 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
-@@ -716,11 +716,3 @@
+@@ -728,11 +728,3 @@
  &vopb_mmu {
  	status = "okay";
  };
@@ -365,22 +382,6 @@ index b69f0f2cbd67..aab612855670 100644
 -&vopl_mmu {
 -	status = "okay";
 -};
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-index cb5dfdf01c8b..1cc97cc36a71 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-@@ -827,11 +827,3 @@
- &vopb_mmu {
- 	status = "okay";
- };
--
--&vopl {
--	status = "okay";
--};
--
--&vopl_mmu {
--	status = "okay";
--};
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
 index 0885d48011ab..471161b1accf 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
@@ -397,8 +398,11 @@ index 0885d48011ab..471161b1accf 100644
 -&vopl_mmu {
 -	status = "okay";
 -};
+-- 
+2.17.1
 
-From 6548d961109e4df46201ed0e19dbb6551cca1583 Mon Sep 17 00:00:00 2001
+
+From 915a6f4cd5cb34c183e26f1c0889f93e55fa9de9 Mon Sep 17 00:00:00 2001
 From: Jonas Karlman <jonas@kwiboo.se>
 Date: Sun, 14 Apr 2019 21:16:31 +0000
 Subject: [PATCH] HACK: arm64: dts: rockchip: rename hdmi sound card on rk3399
@@ -408,7 +412,7 @@ Subject: [PATCH] HACK: arm64: dts: rockchip: rename hdmi sound card on rk3399
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index aa0838adb224..f3c1b42d3561 100644
+index 33cc21fcf4c1..adc8c1058196 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
 @@ -1735,7 +1735,7 @@
@@ -420,24 +424,27 @@ index aa0838adb224..f3c1b42d3561 100644
  		status = "disabled";
  
  		simple-audio-card,cpu {
+-- 
+2.17.1
 
-From 810e5851191546377e5260022c88044adba32eee Mon Sep 17 00:00:00 2001
+
+From 259475f3ec472d65fe037e5c6c4d217062e4a55c Mon Sep 17 00:00:00 2001
 From: Jonas Karlman <jonas@kwiboo.se>
 Date: Sun, 12 May 2019 12:40:00 +0000
 Subject: [PATCH] WIP: arm64: dts: rockchip: add rk3328-box devices
 
 ---
- arch/arm64/boot/dts/rockchip/Makefile            |   3 +
- arch/arm64/boot/dts/rockchip/rk3328-box-trn9.dts | 420 +++++++++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3328-box-z28.dts  | 367 ++++++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3328-box.dts      | 400 +++++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/Makefile         |   3 +
+ .../boot/dts/rockchip/rk3328-box-trn9.dts     | 420 ++++++++++++++++++
+ .../boot/dts/rockchip/rk3328-box-z28.dts      | 367 +++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3328-box.dts   | 400 +++++++++++++++++
  4 files changed, 1190 insertions(+)
  create mode 100644 arch/arm64/boot/dts/rockchip/rk3328-box-trn9.dts
  create mode 100644 arch/arm64/boot/dts/rockchip/rk3328-box-z28.dts
  create mode 100644 arch/arm64/boot/dts/rockchip/rk3328-box.dts
 
 diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 5a15e93a8b68..c475e55a888c 100644
+index 1df8933cb084..9ff568832af7 100644
 --- a/arch/arm64/boot/dts/rockchip/Makefile
 +++ b/arch/arm64/boot/dts/rockchip/Makefile
 @@ -3,6 +3,9 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-evb.dtb
@@ -1655,3 +1662,6 @@ index 000000000000..2526147fd48b
 +&vop_mmu {
 +	status = "okay";
 +};
+-- 
+2.17.1
+

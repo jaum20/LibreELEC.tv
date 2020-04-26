@@ -1,4 +1,4 @@
-From f13b6014af30426eef07bb798afc98a5dbd63975 Mon Sep 17 00:00:00 2001
+From 9d90ae9075f3955e845907144f77b7c4348b969b Mon Sep 17 00:00:00 2001
 From: Jonas Karlman <jonas@kwiboo.se>
 Date: Tue, 29 Oct 2019 01:26:01 +0000
 Subject: [PATCH] RFC: media: uapi: h264: Add DPB entry field reference flags
@@ -50,8 +50,11 @@ index e877bf1d537c..76020ebd1e6c 100644
  
  struct v4l2_h264_dpb_entry {
  	__u64 reference_ts;
+-- 
+2.17.1
 
-From 178708eae224bd680fd9d7721ffe93e51bb19852 Mon Sep 17 00:00:00 2001
+
+From ef240de60cedea0264ca954a8e8e2fa25db097ae Mon Sep 17 00:00:00 2001
 From: Jonas Karlman <jonas@kwiboo.se>
 Date: Tue, 29 Oct 2019 01:26:02 +0000
 Subject: [PATCH] RFC: media: hantro: Fix H264 decoding of field encoded
@@ -61,13 +64,13 @@ This still need code cleanup and formatting
 
 Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 ---
- drivers/staging/media/hantro/hantro_g1_h264_dec.c |  17 +--
- drivers/staging/media/hantro/hantro_h264.c        | 122 ++++++++++++++--------
- drivers/staging/media/hantro/hantro_hw.h          |   2 +
+ .../staging/media/hantro/hantro_g1_h264_dec.c |  17 +--
+ drivers/staging/media/hantro/hantro_h264.c    | 122 ++++++++++++------
+ drivers/staging/media/hantro/hantro_hw.h      |   2 +
  3 files changed, 85 insertions(+), 56 deletions(-)
 
 diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-index 3cd40a8f0daa..4f2923d34d41 100644
+index 424c648ce9fc..89cf5741280e 100644
 --- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
 +++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
 @@ -132,25 +132,12 @@ static void set_ref(struct hantro_ctx *ctx)
@@ -99,7 +102,7 @@ index 3cd40a8f0daa..4f2923d34d41 100644
  	/*
  	 * Set up reference frame picture numbers.
 diff --git a/drivers/staging/media/hantro/hantro_h264.c b/drivers/staging/media/hantro/hantro_h264.c
-index 568640eab3a6..79d96ff4e685 100644
+index f2d3e81fb6ce..4db779354e89 100644
 --- a/drivers/staging/media/hantro/hantro_h264.c
 +++ b/drivers/staging/media/hantro/hantro_h264.c
 @@ -225,17 +225,65 @@ static void prepare_table(struct hantro_ctx *ctx)
@@ -313,10 +316,10 @@ index 568640eab3a6..79d96ff4e685 100644
  
  int hantro_h264_dec_prepare_run(struct hantro_ctx *ctx)
 diff --git a/drivers/staging/media/hantro/hantro_hw.h b/drivers/staging/media/hantro/hantro_hw.h
-index fa91dd1848b7..fb1451e8a80b 100644
+index 2398d4c1f207..3dc7b8f27c32 100644
 --- a/drivers/staging/media/hantro/hantro_hw.h
 +++ b/drivers/staging/media/hantro/hantro_hw.h
-@@ -86,6 +86,8 @@ struct hantro_h264_dec_hw_ctx {
+@@ -88,6 +88,8 @@ struct hantro_h264_dec_hw_ctx {
  	struct v4l2_h264_dpb_entry dpb[HANTRO_H264_DPB_SIZE];
  	struct hantro_h264_dec_reflists reflists;
  	struct hantro_h264_dec_ctrls ctrls;
@@ -325,3 +328,6 @@ index fa91dd1848b7..fb1451e8a80b 100644
  };
  
  /**
+-- 
+2.17.1
+
