@@ -27,4 +27,4 @@
 
 
   # kernel serial console
-    EXTRA_CMDLINE="console=uart8250,mmio32,0x11030000 console=tty0 coherent_pool=2M"
+    EXTRA_CMDLINE="console=uart8250,mmio32,0x11030000 console=tty0 coherent_pool=2M cec.debounce_ms=5000 video=HDMI-A-1:1920x1080"
